@@ -7,25 +7,21 @@
 {% block content %}
 
 <!-- Hero Section -->
-<section class="bg-gradient-to-br from-prairie-700 via-prairie-600 to-prairie text-white relative overflow-hidden">
-    <!-- Subtle background pattern -->
-    <div class="absolute inset-0 opacity-10">
-        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grain" width="60" height="60" patternUnits="userSpaceOnUse"><circle cx="30" cy="30" r="1.5" fill="white"/><circle cx="10" cy="10" r="1" fill="white"/><circle cx="50" cy="50" r="1" fill="white"/></pattern></defs><rect width="100%" height="100%" fill="url(#grain)"/></svg>
-    </div>
+<section class="min-h-[70vh] relative overflow-hidden flex items-center justify-center" style="background: linear-gradient(to bottom right, rgba(14, 58, 74, 0.88), rgba(9, 38, 49, 0.92)), url('https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=1600&q=80') center/cover no-repeat;">
 
-    <div class="max-w-4xl mx-auto px-5 sm:px-6 lg:px-8 py-16 sm:py-24 text-center relative z-10">
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4 sm:mb-4 leading-tight">
+    <div class="max-w-4xl mx-auto px-5 sm:px-6 lg:px-8 py-20 sm:py-28 text-center relative z-10">
+        <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight mb-5 sm:mb-6 leading-[1.08] text-white">
             Find your next market.
         </h1>
-        <p class="text-lg sm:text-xl text-prairie-100 mb-10 sm:mb-10 max-w-2xl mx-auto leading-relaxed">
+        <p class="text-lg sm:text-xl text-prairie-100 mb-10 sm:mb-12 max-w-2xl mx-auto leading-relaxed opacity-90">
             Manitoba vendor opportunities, curated and verified.
         </p>
 
         <!-- Big search bar -->
-        <form action="{% url 'opportunities:list' %}" method="get" class="max-w-xl mx-auto">
+        <form action="{% url 'opportunities:list' %}" method="get" class="max-w-xl mx-auto mb-6">
             <div class="relative">
                 <label for="hero-search" class="sr-only">Search opportunities</label>
-                <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-5 sm:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
                 <input
@@ -34,37 +30,39 @@
                     name="q"
                     placeholder="Search markets, cities, organizers…"
                     autocomplete="off"
-                    class="w-full pl-12 pr-4 py-4 sm:py-4 rounded-xl text-gray-800 text-lg sm:text-lg bg-white shadow-lg shadow-prairie-900/20 border-0 placeholder-gray-400 focus:ring-4 focus:ring-white/30 transition-all"
+                    class="w-full pl-14 pr-5 py-4 rounded-lg text-gray-800 text-lg bg-white shadow-2xl shadow-black/20 border-0 placeholder-gray-400 focus:ring-4 focus:ring-white/30 transition-all"
                 >
             </div>
         </form>
+
+        <!-- Browse All Markets button -->
+        <div class="max-w-xl mx-auto">
+            <a href="{% url 'opportunities:list' %}"
+               class="block w-full sm:w-auto sm:inline-block px-10 py-4 bg-harvest text-white font-semibold text-lg uppercase tracking-widest rounded-sm hover:bg-harvest-700 transition-colors shadow-lg hover:shadow-xl text-center">
+                Browse All Markets
+            </a>
+        </div>
     </div>
 </section>
 
 <!-- Stats bar -->
-<section class="bg-white border-b border-warm-border">
+<section class="bg-prairie-700">
     <div class="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 py-6 sm:py-5">
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-8 text-base sm:text-sm">
-            <div class="flex items-center gap-2.5">
-                <span class="inline-flex items-center justify-center w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-prairie-50 text-prairie">
-                    <svg class="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                </span>
-                <span class="font-semibold text-gray-900">{{ stats.total_open }}</span>
-                <span class="text-gray-500">open opportunities</span>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 text-white">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl font-bold">{{ stats.total_open }}</span>
+                <span class="text-sm uppercase tracking-wide opacity-80">Open Opportunities</span>
             </div>
-            <div class="hidden sm:block w-px h-5 bg-warm-border"></div>
-            <div class="flex items-center gap-2.5">
-                <span class="inline-flex items-center justify-center w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-harvest-50 text-harvest">
-                    <svg class="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </span>
-                <span class="font-semibold text-harvest-600">{{ stats.closing_this_week }}</span>
-                <span class="text-gray-500">closing this week</span>
+            <div class="hidden sm:block w-px h-6 bg-white/20"></div>
+            <div class="flex items-center gap-3">
+                <span class="text-2xl font-bold text-harvest-300">{{ stats.closing_this_week }}</span>
+                <span class="text-sm uppercase tracking-wide opacity-80">Closing This Week</span>
             </div>
-            <div class="hidden sm:block w-px h-5 bg-warm-border"></div>
-            <div class="flex items-center gap-2.5 text-gray-500">
+            <div class="hidden sm:block w-px h-6 bg-white/20"></div>
+            <div class="flex items-center gap-3 opacity-70">
                 {% if stats.last_updated %}
-                <svg class="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                Updated {{ stats.last_updated|timesince }} ago
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span class="text-sm uppercase tracking-wide">Updated {{ stats.last_updated|timesince }} ago</span>
                 {% endif %}
             </div>
         </div>
@@ -73,32 +71,34 @@
 
 <!-- Closing Soon -->
 {% if closing_soon %}
-<section class="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 py-14 sm:py-12">
-    <div class="flex items-center justify-between mb-7 sm:mb-6">
-        <div class="flex items-center gap-3">
-            <span class="inline-flex items-center justify-center w-11 h-11 sm:w-10 sm:h-10 rounded-full bg-red-50 text-red-600">
-                <svg class="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </span>
-            <div>
-                <h2 class="text-2xl sm:text-2xl font-bold text-gray-900">Closing Soon</h2>
-                <p class="text-base sm:text-sm text-gray-500">Don't miss these deadlines</p>
+<section class="py-[80px]">
+    <div class="max-w-6xl mx-auto px-0 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-8 sm:mb-8 px-5 sm:px-0">
+            <div class="flex items-center gap-3">
+                <span class="inline-flex items-center justify-center w-11 h-11 sm:w-10 sm:h-10 rounded-full bg-red-50 text-red-600">
+                    <svg class="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </span>
+                <div>
+                    <h2 class="text-3xl sm:text-3xl font-bold text-gray-900 uppercase tracking-wide">Closing Soon</h2>
+                    <p class="text-base sm:text-sm text-gray-500">Don't miss these deadlines</p>
+                </div>
             </div>
+            <a href="{% url 'opportunities:list' %}?sort=deadline" class="text-base sm:text-sm font-medium text-prairie hover:text-prairie-light transition-colors hidden sm:block">
+                View all →
+            </a>
         </div>
-        <a href="{% url 'opportunities:list' %}?sort=deadline" class="text-base sm:text-sm font-medium text-prairie hover:text-prairie-light transition-colors hidden sm:block">
-            View all →
-        </a>
-    </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-5">
-        {% for opp in closing_soon %}
-            {% include "components/opportunity_card.html" with opp=opp %}
-        {% endfor %}
-    </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 sm:gap-5 px-0 sm:px-0">
+            {% for opp in closing_soon %}
+                {% include "components/opportunity_card.html" with opp=opp %}
+            {% endfor %}
+        </div>
 
-    <div class="text-center mt-8 sm:hidden">
-        <a href="{% url 'opportunities:list' %}?sort=deadline" class="text-base font-medium text-prairie hover:text-prairie-light transition-colors py-2 inline-block">
-            View all opportunities →
-        </a>
+        <div class="text-center mt-8 sm:hidden">
+            <a href="{% url 'opportunities:list' %}?sort=deadline" class="text-base font-medium text-prairie hover:text-prairie-light transition-colors py-2 inline-block">
+                View all opportunities →
+            </a>
+        </div>
     </div>
 </section>
 {% endif %}
@@ -106,14 +106,14 @@
 <!-- Recently Added -->
 {% if recently_added %}
 <section class="bg-white border-y border-warm-border">
-    <div class="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 py-14 sm:py-12">
-        <div class="flex items-center justify-between mb-7 sm:mb-6">
+    <div class="max-w-6xl mx-auto px-0 sm:px-6 lg:px-8 py-[80px]">
+        <div class="flex items-center justify-between mb-8 sm:mb-8 px-5 sm:px-0">
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center justify-center w-11 h-11 sm:w-10 sm:h-10 rounded-full bg-prairie-50 text-prairie">
                     <svg class="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                 </span>
                 <div>
-                    <h2 class="text-2xl sm:text-2xl font-bold text-gray-900">Recently Added</h2>
+                    <h2 class="text-3xl sm:text-3xl font-bold text-gray-900 uppercase tracking-wide">Recently Added</h2>
                     <p class="text-base sm:text-sm text-gray-500">Fresh opportunities just listed</p>
                 </div>
             </div>
@@ -122,7 +122,7 @@
             </a>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 sm:gap-5 px-0 sm:px-0">
             {% for opp in recently_added %}
                 {% include "components/opportunity_card.html" with opp=opp %}
             {% endfor %}
@@ -138,29 +138,27 @@
 {% endif %}
 
 <!-- Newsletter signup -->
-<section class="bg-warm-bg py-12 sm:py-16">
-    <div class="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8">
-    <div class="bg-prairie-50 rounded-2xl px-6 sm:px-12 py-10 sm:py-12 text-center border border-prairie-100">
-        <div class="inline-flex items-center justify-center w-14 h-14 sm:w-12 sm:h-12 rounded-full bg-prairie text-white mb-5">
-            <svg class="w-7 h-7 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+<section class="bg-prairie-900 py-20 sm:py-24">
+    <div class="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/10 text-white mb-6">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Get weekly opportunities in your inbox</h2>
-        <p class="text-gray-600 mb-7 sm:mb-8 max-w-md mx-auto text-base sm:text-base leading-relaxed">No spam, just the latest Manitoba vendor opportunities. Unsubscribe anytime.</p>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight">Get weekly opportunities<br class="hidden sm:block"> in your inbox</h2>
+        <p class="text-prairie-200 mb-10 max-w-md mx-auto text-lg leading-relaxed opacity-80">No spam, just the latest Manitoba vendor opportunities. Unsubscribe anytime.</p>
         {% include "components/newsletter_form.html" %}
-    </div>
     </div>
 </section>
 
 <!-- For Market Organizers CTA -->
-<section class="bg-white border-t border-warm-border">
-    <div class="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 py-14 sm:py-16 text-center">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Organizing a market?</h2>
-        <p class="text-gray-600 mb-8 max-w-lg mx-auto leading-relaxed text-base sm:text-base">
+<section class="bg-warm-bg">
+    <div class="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 py-20 sm:py-24 text-center">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-5 tracking-tight">Organizing a market?</h2>
+        <p class="text-gray-600 mb-10 max-w-lg mx-auto leading-relaxed text-lg">
             Get your vendor call in front of Manitoba's makers, farmers, and artisans — free.
         </p>
         <a href="{% url 'pages:contact' %}"
-           class="inline-flex items-center gap-2 px-8 py-4 sm:py-3.5 rounded-xl bg-harvest text-white font-semibold text-lg sm:text-base hover:bg-harvest-700 transition-colors shadow-md hover:shadow-lg">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+           class="block w-full sm:w-auto sm:inline-flex items-center justify-center gap-2 px-10 py-4 rounded-sm bg-harvest text-white font-semibold text-lg uppercase tracking-widest hover:bg-harvest-700 transition-colors shadow-lg hover:shadow-xl text-center">
+            <svg class="w-5 h-5 hidden sm:inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
             Submit Your Market
         </a>
     </div>

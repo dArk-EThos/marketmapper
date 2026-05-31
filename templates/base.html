@@ -76,6 +76,14 @@
                 fontFamily: {
                     sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
                 },
+                letterSpacing: {
+                    'widest-plus': '0.15em',
+                    'ultra': '0.2em',
+                },
+                height: {
+                    '18': '4.5rem',
+                    '20': '5rem',
+                },
             },
         },
     }
@@ -84,14 +92,25 @@
     <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     {% block extra_head %}{% endblock %}
 
     <style>
-        /* Mobile-first: 17px base for Apple HIG compliance */
+        /* Mobile-first: 18px base for premium readability */
+        html {
+            scroll-behavior: smooth;
+        }
         @media (max-width: 639px) {
-            html { font-size: 17px; }
+            html { font-size: 18px; }
+        }
+
+        /* Body text: 150% line-height for premium feel */
+        body {
+            line-height: 1.5;
+        }
+        @media (max-width: 639px) {
+            body { line-height: 1.5; }
         }
 
         /* Smooth transitions for interactive elements */
@@ -101,13 +120,26 @@
         }
         .card-hover:active { transform: scale(0.98); }
 
-        /* Mobile menu transition */
-        .mobile-menu { transition: max-height 0.3s ease, opacity 0.3s ease; }
-        .mobile-menu.hidden { max-height: 0; opacity: 0; overflow: hidden; }
-        .mobile-menu.open { max-height: 400px; opacity: 1; }
+        /* Mobile menu overlay transition */
+        .mobile-menu-overlay {
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .mobile-menu-overlay .menu-inner {
+            transition: transform 0.35s ease;
+            transform: translateY(-1rem);
+        }
+        .mobile-menu-overlay.open .menu-inner {
+            transform: translateY(0);
+        }
 
         /* Focus ring for accessibility */
-        *:focus-visible { outline: 2px solid #175268; outline-offset: 2px; border-radius: 4px; }
+        *:focus-visible { outline: 2px solid #f97900; outline-offset: 2px; border-radius: 2px; }
 
         /* Pulse for urgency */
         @keyframes urgentPulse {
@@ -127,80 +159,104 @@
         /* Tap highlight color */
         * { -webkit-tap-highlight-color: rgba(23, 82, 104, 0.1); }
 
-        /* Generous line height for body text on mobile */
-        @media (max-width: 639px) {
-            body { line-height: 1.75; }
+        /* Nav link hover underline effect */
+        .nav-link-premium {
+            position: relative;
+        }
+        .nav-link-premium::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #f97900;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+        .nav-link-premium:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Back to top smooth hover */
+        .back-to-top {
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .back-to-top:hover {
+            transform: translateY(-2px);
         }
     </style>
 </head>
-<body class="bg-white text-gray-800 font-sans min-h-screen flex flex-col antialiased">
+<body id="top" class="bg-warm-bg text-gray-800 font-sans min-h-screen flex flex-col antialiased">
 
     <!-- Skip to content link for accessibility -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-prairie text-white px-4 py-2 rounded-md z-50">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-harvest text-white px-4 py-2 z-50">
         Skip to content
     </a>
 
-    <!-- Navigation -->
-    <header class="bg-white border-b border-warm-border sticky top-0 z-40">
-        <nav class="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8" aria-label="Main navigation">
-            <div class="flex items-center justify-between h-16 sm:h-16">
+    <!-- Navigation — dark sticky header -->
+    <header class="bg-prairie-800 sticky top-0 z-40 shadow-lg">
+        <nav class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8" aria-label="Main navigation">
+            <div class="flex items-center justify-between h-16 md:h-18 lg:h-20">
                 <!-- Logo -->
-                <a href="{% url 'pages:home' %}" class="flex items-center gap-2 sm:gap-2 text-prairie-700 font-bold text-xl sm:text-xl tracking-tight hover:text-prairie transition-colors">
-                    <img src="{% static 'img/MM-logo.svg' %}" alt="Market Mapper" class="w-10 h-10 sm:w-11 sm:h-11">
+                <a href="{% url 'pages:home' %}" class="flex items-center gap-2 sm:gap-3 text-white font-bold text-xl sm:text-xl lg:text-2xl tracking-tight hover:text-harvest-300 transition-colors duration-200">
+                    <img src="{% static 'img/MM-logo.svg' %}" alt="Market Mapper" class="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12">
                     <span>Market Mapper</span>
                 </a>
 
                 <!-- Desktop nav -->
                 <div class="hidden lg:flex items-center gap-1">
-                    <a href="{% url 'opportunities:list' %}" class="px-4 py-2 rounded-lg text-gray-600 hover:text-prairie hover:bg-prairie-50 font-medium transition-colors">
+                    <a href="{% url 'opportunities:list' %}" class="nav-link-premium px-4 py-2 text-white/80 hover:text-white font-medium tracking-wide uppercase text-sm transition-colors duration-200">
                         Browse Markets
                     </a>
-                    <a href="{% url 'blog:list' %}" class="px-4 py-2 rounded-lg text-gray-600 hover:text-prairie hover:bg-prairie-50 font-medium transition-colors">
+                    <a href="{% url 'blog:list' %}" class="nav-link-premium px-4 py-2 text-white/80 hover:text-white font-medium tracking-wide uppercase text-sm transition-colors duration-200">
                         Guides
                     </a>
-                    <a href="{% url 'stories:list' %}" class="px-4 py-2 rounded-lg text-gray-600 hover:text-prairie hover:bg-prairie-50 font-medium transition-colors">
+                    <a href="{% url 'stories:list' %}" class="nav-link-premium px-4 py-2 text-white/80 hover:text-white font-medium tracking-wide uppercase text-sm transition-colors duration-200">
                         Vendor Stories
                     </a>
-                    <a href="{% url 'pages:about' %}" class="px-4 py-2 rounded-lg text-gray-600 hover:text-prairie hover:bg-prairie-50 font-medium transition-colors">
+                    <a href="{% url 'pages:about' %}" class="nav-link-premium px-4 py-2 text-white/80 hover:text-white font-medium tracking-wide uppercase text-sm transition-colors duration-200">
                         About
                     </a>
-                    <a href="{% url 'pages:contact' %}" class="px-4 py-2 rounded-lg bg-harvest text-white hover:bg-harvest-700 font-medium transition-colors ml-2">
+                    <a href="{% url 'pages:contact' %}" class="ml-4 px-6 py-2.5 bg-harvest text-white hover:bg-harvest-600 font-semibold uppercase text-sm tracking-widest rounded-sm transition-colors duration-200 shadow-md hover:shadow-lg">
                         Submit a Market
                     </a>
                 </div>
 
-                <!-- Mobile hamburger -->
-                <button id="mobile-menu-btn" class="lg:hidden p-3 -mr-1 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors" aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle menu">
-                    <svg id="menu-icon-open" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                <!-- Mobile hamburger — 44px touch target -->
+                <button id="mobile-menu-btn" class="lg:hidden flex items-center justify-center w-11 h-11 -mr-1 text-white hover:text-harvest-300 transition-colors duration-200" aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle menu">
+                    <svg id="menu-icon-open" class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
-                    <svg id="menu-icon-close" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    <svg id="menu-icon-close" class="w-7 h-7 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
             </div>
+        </nav>
 
-            <!-- Mobile menu -->
-            <div id="mobile-menu" class="mobile-menu hidden lg:hidden pb-5">
-                <div class="flex flex-col gap-1.5 pt-4 border-t border-warm-border">
-                    <a href="{% url 'opportunities:list' %}" class="px-5 py-4 rounded-xl text-gray-700 hover:bg-prairie-50 hover:text-prairie font-medium text-lg active:bg-prairie-100 transition-colors">
+        <!-- Mobile menu — full-screen overlay -->
+        <div id="mobile-menu" class="mobile-menu-overlay fixed inset-0 top-16 bg-prairie-900/[0.98] lg:hidden z-50">
+            <div class="menu-inner flex flex-col items-center justify-center min-h-full px-6 py-10 safe-bottom">
+                <div class="flex flex-col items-center gap-0 w-full max-w-sm">
+                    <a href="{% url 'opportunities:list' %}" class="mobile-nav-link w-full text-center text-white text-xl font-semibold uppercase tracking-widest-plus py-5 border-b border-white/10 hover:text-harvest-300 transition-colors duration-200">
                         Browse Markets
                     </a>
-                    <a href="{% url 'blog:list' %}" class="px-5 py-4 rounded-xl text-gray-700 hover:bg-prairie-50 hover:text-prairie font-medium text-lg active:bg-prairie-100 transition-colors">
+                    <a href="{% url 'blog:list' %}" class="mobile-nav-link w-full text-center text-white text-xl font-semibold uppercase tracking-widest-plus py-5 border-b border-white/10 hover:text-harvest-300 transition-colors duration-200">
                         Guides
                     </a>
-                    <a href="{% url 'stories:list' %}" class="px-5 py-4 rounded-xl text-gray-700 hover:bg-prairie-50 hover:text-prairie font-medium text-lg active:bg-prairie-100 transition-colors">
+                    <a href="{% url 'stories:list' %}" class="mobile-nav-link w-full text-center text-white text-xl font-semibold uppercase tracking-widest-plus py-5 border-b border-white/10 hover:text-harvest-300 transition-colors duration-200">
                         Vendor Stories
                     </a>
-                    <a href="{% url 'pages:about' %}" class="px-5 py-4 rounded-xl text-gray-700 hover:bg-prairie-50 hover:text-prairie font-medium text-lg active:bg-prairie-100 transition-colors">
+                    <a href="{% url 'pages:about' %}" class="mobile-nav-link w-full text-center text-white text-xl font-semibold uppercase tracking-widest-plus py-5 border-b border-white/10 hover:text-harvest-300 transition-colors duration-200">
                         About
                     </a>
-                    <a href="{% url 'pages:contact' %}" class="px-5 py-4 rounded-xl bg-harvest text-white hover:bg-harvest-700 font-semibold text-lg text-center mt-2 active:bg-harvest-600 transition-colors shadow-sm">
+                    <a href="{% url 'pages:contact' %}" class="mt-8 w-full text-center bg-harvest text-white text-xl font-bold uppercase tracking-widest py-4 rounded-sm hover:bg-harvest-600 transition-colors duration-200 shadow-lg">
                         Submit a Market
                     </a>
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
 
     <!-- Main content -->
@@ -208,50 +264,57 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-warm-border mt-auto">
-        <div class="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 py-10 sm:py-12">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-8 text-center md:text-left">
+    <!-- Footer — dark premium -->
+    <footer class="bg-prairie-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-16 sm:py-20">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 text-center md:text-left">
                 <!-- Brand -->
                 <div>
-                    <a href="{% url 'pages:home' %}" class="inline-flex items-center gap-2 text-prairie-700 font-bold text-lg">
-                        <img src="{% static 'img/MM-logo.svg' %}" alt="Market Mapper" class="w-10 h-10">
+                    <a href="{% url 'pages:home' %}" class="inline-flex items-center gap-2 text-white font-bold text-lg lg:text-xl">
+                        <img src="{% static 'img/MM-logo.svg' %}" alt="Market Mapper" class="w-10 h-10 lg:w-12 lg:h-12">
                         Market Mapper
                     </a>
-                    <p class="text-gray-500 text-base sm:text-sm mt-4 leading-relaxed">
+                    <p class="text-gray-300 text-base sm:text-base mt-5 leading-relaxed">
                         Manitoba vendor opportunities,<br>curated and verified.
                     </p>
-                    <p class="text-gray-400 text-sm sm:text-xs mt-5 flex items-center gap-1.5 justify-center md:justify-start">
-                        <svg class="w-4 h-4 sm:w-3.5 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    <p class="text-gray-400 text-sm mt-5 flex items-center gap-1.5 justify-center md:justify-start">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
                         Made in Manitoba
                     </p>
                 </div>
 
                 <!-- Links -->
                 <div>
-                    <h3 class="font-semibold text-gray-800 mb-4 text-base sm:text-sm uppercase tracking-wider">Explore</h3>
-                    <ul class="space-y-3 sm:space-y-2">
-                        <li><a href="{% url 'opportunities:list' %}" class="text-gray-500 hover:text-prairie transition-colors text-base sm:text-sm py-1 inline-block">Browse Markets</a></li>
-                        <li><a href="{% url 'blog:list' %}" class="text-gray-500 hover:text-prairie transition-colors text-base sm:text-sm py-1 inline-block">Guides & Tips</a></li>
-                        <li><a href="{% url 'stories:list' %}" class="text-gray-500 hover:text-prairie transition-colors text-base sm:text-sm py-1 inline-block">Vendor Stories</a></li>
-                        <li><a href="{% url 'pages:about' %}" class="text-gray-500 hover:text-prairie transition-colors text-base sm:text-sm py-1 inline-block">About</a></li>
-                        <li><a href="{% url 'pages:contact' %}" class="text-gray-500 hover:text-prairie transition-colors text-base sm:text-sm py-1 inline-block">Contact</a></li>
-                        <li><a href="{% url 'pages:contact' %}" class="text-gray-500 hover:text-prairie transition-colors text-base sm:text-sm py-1 inline-block">Submit a Market</a></li>
+                    <h3 class="font-semibold text-white mb-5 text-sm uppercase tracking-widest">Explore</h3>
+                    <ul class="space-y-3">
+                        <li><a href="{% url 'opportunities:list' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">Browse Markets</a></li>
+                        <li><a href="{% url 'blog:list' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">Guides & Tips</a></li>
+                        <li><a href="{% url 'stories:list' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">Vendor Stories</a></li>
+                        <li><a href="{% url 'pages:about' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">About</a></li>
+                        <li><a href="{% url 'pages:contact' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">Contact</a></li>
+                        <li><a href="{% url 'pages:contact' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">Submit a Market</a></li>
                     </ul>
                 </div>
 
                 <!-- Legal -->
                 <div>
-                    <h3 class="font-semibold text-gray-800 mb-4 text-base sm:text-sm uppercase tracking-wider">Info</h3>
-                    <ul class="space-y-3 sm:space-y-2">
-                        <li><a href="{% url 'pages:privacy' %}" class="text-gray-500 hover:text-prairie transition-colors text-base sm:text-sm py-1 inline-block">Privacy Policy</a></li>
-                        <li><a href="{% url 'pages:contact' %}" class="text-gray-500 hover:text-prairie transition-colors text-base sm:text-sm py-1 inline-block">Terms of Use</a></li>
+                    <h3 class="font-semibold text-white mb-5 text-sm uppercase tracking-widest">Info</h3>
+                    <ul class="space-y-3">
+                        <li><a href="{% url 'pages:privacy' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">Privacy Policy</a></li>
+                        <li><a href="{% url 'pages:contact' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">Terms of Use</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="border-t border-warm-border mt-8 pt-6 text-center">
-                <p class="text-gray-400 text-base sm:text-sm">&copy; 2026 Market Mapper. All rights reserved.</p>
+            <!-- Bottom bar with Back to top -->
+            <div class="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-gray-400 text-sm">&copy; 2026 Market Mapper. All rights reserved.</p>
+                <a href="#top" class="back-to-top text-gray-400 hover:text-harvest-300 text-sm font-medium uppercase tracking-widest flex items-center gap-2">
+                    <span>Back to top</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </footer>
@@ -263,23 +326,45 @@
         const menu = document.getElementById('mobile-menu');
         const iconOpen = document.getElementById('menu-icon-open');
         const iconClose = document.getElementById('menu-icon-close');
+        const body = document.body;
 
         btn.addEventListener('click', function() {
-            const isOpen = !menu.classList.contains('hidden');
+            const isOpen = menu.classList.contains('open');
             if (isOpen) {
-                menu.classList.add('hidden');
                 menu.classList.remove('open');
                 iconOpen.classList.remove('hidden');
                 iconClose.classList.add('hidden');
                 btn.setAttribute('aria-expanded', 'false');
+                body.style.overflow = '';
             } else {
-                menu.classList.remove('hidden');
-                // Force reflow for transition
-                menu.offsetHeight;
                 menu.classList.add('open');
                 iconOpen.classList.add('hidden');
                 iconClose.classList.remove('hidden');
                 btn.setAttribute('aria-expanded', 'true');
+                body.style.overflow = 'hidden';
+            }
+        });
+
+        // Close mobile menu on link click
+        menu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                menu.classList.remove('open');
+                iconOpen.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+                btn.setAttribute('aria-expanded', 'false');
+                body.style.overflow = '';
+            });
+        });
+
+        // Close mobile menu on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                iconOpen.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+                btn.setAttribute('aria-expanded', 'false');
+                body.style.overflow = '';
+                btn.focus();
             }
         });
     })();
