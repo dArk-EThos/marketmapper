@@ -2,31 +2,27 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
 *.egg-info/
 dist/
 build/
+eggs/
 *.egg
 
-# Virtual environments
+# Virtual environment
 .venv/
 venv/
-env/
+ENV/
 
-# Environment & secrets
-.env
-.env.*
-!.env.example
-
-# Database
+# Django
 db.sqlite3
 db.sqlite3-journal
-*.db
-
-# Static files (collected)
-staticfiles/
-
-# Media uploads
 media/
+staticfiles/
+static_root/
+
+# Environment
+.env
 
 # IDE
 .vscode/
@@ -41,11 +37,3 @@ Thumbs.db
 
 # Logs
 *.log
-logs/
-
-# Backups
-backups/
-
-# Temp files
-*.tmp
-*.bak
