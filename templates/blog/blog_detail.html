@@ -33,6 +33,81 @@
     }
 }
 </script>
+
+<!-- Enhanced spacing and readability styles -->
+<style>
+.article-body {
+    /* Enhanced paragraph spacing */
+}
+.article-body p + p {
+    margin-top: 1.5rem;
+}
+.article-body h2 + p,
+.article-body h3 + p,
+.article-body h4 + p {
+    margin-top: 0.75rem;
+}
+.article-body p + h2,
+.article-body p + h3,
+.article-body p + h4 {
+    margin-top: 2rem;
+}
+
+/* Event cards for better structure */
+.event-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+.event-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-color: #0ea5e9;
+}
+
+/* Image gallery styles */
+.image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+.image-gallery img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+.image-gallery img:hover {
+    transform: scale(1.02);
+}
+
+/* Call-out boxes */
+.callout-box {
+    background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+    border: 1px solid #a7f3d0;
+    border-left: 4px solid #10b981;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+.callout-box.warning {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border-color: #fcd34d;
+    border-left-color: #f59e0b;
+}
+.callout-box.info {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border-color: #93c5fd;
+    border-left-color: #3b82f6;
+}
+</style>
 {% endblock %}
 
 {% block content %}
@@ -52,9 +127,9 @@
     <article>
 
         <!-- Header -->
-        <header class="mb-8 sm:mb-10">
+        <header class="mb-8 sm:mb-12">
             <!-- Category + Date -->
-            <div class="flex flex-wrap items-center gap-3 mb-5">
+            <div class="flex flex-wrap items-center gap-3 mb-6">
                 {% if post.category %}
                 <a href="{% url 'blog:category' post.category %}"
                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-forest-50 text-forest-600 hover:bg-forest-100 transition-colors uppercase tracking-wide">
@@ -67,19 +142,19 @@
             </div>
 
             <!-- Title -->
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight tracking-tight">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight tracking-tight mb-6">
                 {{ post.title }}
             </h1>
 
             <!-- Excerpt / Subtitle -->
             {% if post.excerpt %}
-            <p class="mt-5 text-lg sm:text-xl text-gray-500 leading-relaxed">
+            <p class="text-lg sm:text-xl text-gray-500 leading-relaxed mb-6">
                 {{ post.excerpt }}
             </p>
             {% endif %}
 
             <!-- Author line -->
-            <div class="flex items-center gap-3 mt-6 pt-6 border-t border-gray-100">
+            <div class="flex items-center gap-3 pt-6 border-t border-gray-100">
                 <div class="w-10 h-10 rounded-full bg-prairie flex items-center justify-center text-white font-bold text-sm">
                     {{ post.author_name|default:"MM"|make_list|first|upper }}
                 </div>
@@ -92,44 +167,62 @@
 
         <!-- Featured Image -->
         {% if post.featured_image_url %}
-        <figure class="mb-10 sm:mb-12 -mx-4 sm:mx-0">
+        <figure class="mb-12 -mx-4 sm:mx-0">
             <img src="{{ post.featured_image_url }}"
                  alt="{{ post.title }}"
-                 class="w-full h-64 sm:h-80 lg:h-96 object-cover sm:rounded-2xl"
+                 class="w-full h-64 sm:h-80 lg:h-96 object-cover sm:rounded-2xl shadow-lg"
                  loading="lazy">
         </figure>
         {% endif %}
 
-        <!-- Body — Markdown rendered with full typography -->
-        <div class="
+        <!-- Body — Enhanced with better spacing and structure -->
+        <div class="article-body
             prose prose-lg max-w-none
             prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-gray-900
-            prose-h2:text-2xl prose-h2:sm:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pt-8 prose-h2:border-t prose-h2:border-gray-100
-            prose-h3:text-xl prose-h3:sm:text-2xl prose-h3:mt-8 prose-h3:mb-4
-            prose-h4:text-lg prose-h4:mt-6 prose-h4:mb-3
-            prose-p:text-gray-600 prose-p:leading-relaxed prose-p:mb-6 prose-p:text-base prose-p:sm:text-lg
-            prose-a:text-prairie prose-a:font-medium prose-a:underline prose-a:underline-offset-2 prose-a:decoration-prairie/30 hover:prose-a:decoration-prairie
+            prose-h1:text-3xl prose-h1:sm:text-4xl prose-h1:mt-16 prose-h1:mb-8 prose-h1:pb-4 prose-h1:border-b prose-h1:border-gray-200
+            prose-h2:text-2xl prose-h2:sm:text-3xl prose-h2:mt-16 prose-h2:mb-8 prose-h2:pt-6 prose-h2:border-t-2 prose-h2:border-gray-100 prose-h2:bg-gradient-to-r prose-h2:from-gray-50/50 prose-h2:to-transparent prose-h2:-mx-6 prose-h2:px-6 prose-h2:py-4 prose-h2:rounded-lg prose-h2:text-forest-600
+            prose-h3:text-xl prose-h3:sm:text-2xl prose-h3:mt-12 prose-h3:mb-6 prose-h3:text-forest-600 prose-h3:font-semibold
+            prose-h4:text-lg prose-h4:mt-10 prose-h4:mb-4 prose-h4:font-semibold prose-h4:text-gray-800
+            prose-p:text-gray-600 prose-p:leading-relaxed prose-p:mb-8 prose-p:text-base prose-p:sm:text-lg prose-p:max-w-none
+            prose-a:text-prairie prose-a:font-medium prose-a:underline prose-a:underline-offset-2 prose-a:decoration-prairie/30 hover:prose-a:decoration-prairie prose-a:transition-all
             prose-strong:text-gray-900 prose-strong:font-semibold
-            prose-ul:my-6 prose-ul:space-y-2
-            prose-ol:my-6 prose-ol:space-y-2
-            prose-li:text-gray-600 prose-li:text-base prose-li:sm:text-lg prose-li:leading-relaxed
-            prose-blockquote:border-l-4 prose-blockquote:border-prairie prose-blockquote:bg-prairie-50/30 prose-blockquote:py-1 prose-blockquote:px-6 prose-blockquote:rounded-r-lg prose-blockquote:not-italic
-            prose-table:border-collapse prose-table:w-full prose-table:my-8
-            prose-th:bg-gray-50 prose-th:text-left prose-th:text-sm prose-th:font-semibold prose-th:text-gray-700 prose-th:px-4 prose-th:py-3 prose-th:border prose-th:border-gray-200
-            prose-td:text-sm prose-td:text-gray-600 prose-td:px-4 prose-td:py-3 prose-td:border prose-td:border-gray-200
-            prose-img:rounded-xl prose-img:shadow-sm prose-img:my-8
-            prose-hr:my-12 prose-hr:border-gray-200
-            prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:text-prairie-dark prose-code:before:content-none prose-code:after:content-none
+            prose-em:text-forest-600 prose-em:font-medium
+            prose-ul:my-8 prose-ul:space-y-3 prose-ul:pl-0
+            prose-ol:my-8 prose-ol:space-y-3 prose-ol:pl-0
+            prose-li:text-gray-600 prose-li:text-base prose-li:sm:text-lg prose-li:leading-relaxed prose-li:mb-2 prose-li:pl-2
+            prose-li:marker:text-prairie prose-li:marker:font-bold
+            prose-blockquote:border-l-4 prose-blockquote:border-prairie prose-blockquote:bg-prairie-50/30 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:my-8 prose-blockquote:shadow-sm
+            prose-table:border-collapse prose-table:w-full prose-table:my-10 prose-table:shadow-sm prose-table:rounded-lg prose-table:overflow-hidden
+            prose-th:bg-gray-50 prose-th:text-left prose-th:text-sm prose-th:font-semibold prose-th:text-gray-700 prose-th:px-6 prose-th:py-4 prose-th:border prose-th:border-gray-200
+            prose-td:text-sm prose-td:text-gray-600 prose-td:px-6 prose-td:py-4 prose-td:border prose-td:border-gray-200 prose-td:leading-relaxed
+            prose-img:rounded-xl prose-img:shadow-lg prose-img:my-12 prose-img:border prose-img:border-gray-100 prose-img:max-w-full
+            prose-hr:my-16 prose-hr:border-gray-200 prose-hr:border-t-2
+            prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:text-prairie-dark prose-code:before:content-none prose-code:after:content-none prose-code:font-medium
+            [&>*:first-child]:mt-0 [&>*:last-child]:mb-0
         ">
-            {{ post.body|markdownify }}
+            {{ post.body|markdownify|enhance_readability }}
         </div>
+
+        <!-- Additional Images Section (if you want to add more images in the future) -->
+        {% comment %}
+        {% if post.additional_images %}
+        <section class="my-16">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6">Gallery</h3>
+            <div class="image-gallery">
+                {% for image in post.additional_images %}
+                <img src="{{ image.url }}" alt="{{ image.caption|default:post.title }}" loading="lazy">
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+        {% endcomment %}
 
         <!-- Tags -->
         {% if post.tags %}
-        <div class="mt-12 pt-8 border-t border-gray-100">
+        <div class="mt-16 pt-8 border-t border-gray-100">
             <div class="flex flex-wrap gap-2">
                 {% for tag in post.tags %}
-                <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm bg-gray-50 text-gray-500 border border-gray-200">
+                <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm bg-gray-50 text-gray-500 border border-gray-200 hover:bg-gray-100 transition-colors">
                     #{{ tag }}
                 </span>
                 {% endfor %}
@@ -140,7 +233,7 @@
     </article>
 
     <!-- CTA Box -->
-    <div class="mt-12 bg-prairie-50/50 border border-prairie/10 rounded-2xl p-6 sm:p-8 text-center">
+    <div class="mt-16 bg-prairie-50/50 border border-prairie/10 rounded-2xl p-6 sm:p-8 text-center shadow-sm">
         <h3 class="text-lg font-bold text-gray-900 mb-2">Find Your Next Vendor Opportunity</h3>
         <p class="text-gray-500 mb-5">Browse 39+ verified markets, festivals, and fairs across Manitoba.</p>
         <a href="{% url 'opportunities:list' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-prairie text-white font-semibold text-sm hover:bg-prairie-light transition-colors shadow-sm">
