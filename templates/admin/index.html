@@ -1,0 +1,102 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block content %}
+<div id="mm-dashboard" style="
+    margin-bottom: 30px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 12px;
+    padding: 28px 32px;
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+">
+    <h2 style="margin: 0 0 20px 0; font-size: 22px; font-weight: 700; letter-spacing: 0.5px;">
+        📊 Opportunity Pipeline
+    </h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;">
+
+        <!-- Total Opportunities -->
+        <div style="
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px 18px;
+            text-align: center;
+            backdrop-filter: blur(4px);
+        ">
+            <div style="font-size: 36px; font-weight: 800; line-height: 1;">
+                {{ mm_total|default:"0" }}
+            </div>
+            <div style="font-size: 12px; margin-top: 8px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px;">
+                Total Opportunities
+            </div>
+        </div>
+
+        <!-- Open & Publishable -->
+        <div style="
+            background: rgba(40,167,69,0.25);
+            border: 1px solid rgba(40,167,69,0.4);
+            border-radius: 10px;
+            padding: 20px 18px;
+            text-align: center;
+        ">
+            <div style="font-size: 36px; font-weight: 800; line-height: 1; color: #5fec8b;">
+                {{ mm_open_publishable|default:"0" }}
+            </div>
+            <div style="font-size: 12px; margin-top: 8px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px;">
+                Open &amp; Publishable
+            </div>
+        </div>
+
+        <!-- Closing This Week -->
+        <div style="
+            background: rgba(255,193,7,0.2);
+            border: 1px solid rgba(255,193,7,0.4);
+            border-radius: 10px;
+            padding: 20px 18px;
+            text-align: center;
+        ">
+            <div style="font-size: 36px; font-weight: 800; line-height: 1; color: #ffd95a;">
+                {{ mm_closing_this_week|default:"0" }}
+            </div>
+            <div style="font-size: 12px; margin-top: 8px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px;">
+                Closing This Week
+            </div>
+        </div>
+
+        <!-- Leads to Verify -->
+        <div style="
+            background: rgba(0,123,255,0.2);
+            border: 1px solid rgba(0,123,255,0.4);
+            border-radius: 10px;
+            padding: 20px 18px;
+            text-align: center;
+        ">
+            <div style="font-size: 36px; font-weight: 800; line-height: 1; color: #6db3f2;">
+                {{ mm_leads_to_verify|default:"0" }}
+            </div>
+            <div style="font-size: 12px; margin-top: 8px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px;">
+                Leads to Verify
+            </div>
+        </div>
+
+        <!-- Recently Added -->
+        <div style="
+            background: rgba(111,66,193,0.2);
+            border: 1px solid rgba(111,66,193,0.4);
+            border-radius: 10px;
+            padding: 20px 18px;
+            text-align: center;
+        ">
+            <div style="font-size: 36px; font-weight: 800; line-height: 1; color: #c4a0ff;">
+                {{ mm_recently_added|default:"0" }}
+            </div>
+            <div style="font-size: 12px; margin-top: 8px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px;">
+                Added (7 days)
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{{ block.super }}
+{% endblock %}

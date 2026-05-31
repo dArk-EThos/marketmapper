@@ -1,0 +1,27 @@
+[Unit]
+Description=Market Mapper Django Application
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=notify
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/marketmapper
+ExecStart=/opt/marketmapper/.venv/bin/gunicorn config.wsgi:application -c /opt/marketmapper/deploy/gunicorn.conf.py
+ExecReload=/bin/kill -s HUP $MAINPID
+Environment=DJANGO_SETTINGS_MODULE=config.settings.production
+EnvironmentFile=/opt/marketmapper/.env
+Restart=always
+RestartSec=3
+KillMode=mixed
+TimeoutStopSec=5
+
+# Hardening
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/marketmapper/media /var/log/marketmapper
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

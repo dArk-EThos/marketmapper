@@ -1,0 +1,280 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Market Mapper{% endblock %} | Manitoba Vendor Opportunities</title>
+    <meta name="description" content="{% block meta_description %}Find farmers markets, craft fairs, food festivals, and vendor opportunities across Manitoba.{% endblock %}">
+
+    <!-- Open Graph -->
+    {% block og_tags %}
+    <meta property="og:title" content="Market Mapper — Manitoba Vendor Opportunities">
+    <meta property="og:description" content="Find farmers markets, craft fairs, food festivals, and vendor opportunities across Manitoba.">
+    <meta property="og:image" content="{% static 'img/MM-logo.png' %}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_CA">
+    {% endblock %}
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon-32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon-16.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/apple-touch-icon.png' %}">
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    prairie: {
+                        DEFAULT: '#175268',
+                        light: '#557686',
+                        50: '#eef4f6',
+                        100: '#d5e3e9',
+                        200: '#aac7d3',
+                        300: '#7faabb',
+                        400: '#5a8ea3',
+                        500: '#3a7189',
+                        600: '#175268',
+                        700: '#00334a',
+                        800: '#002537',
+                        900: '#001a28',
+                    },
+                    harvest: {
+                        DEFAULT: '#f97900',
+                        light: '#f9aa63',
+                        50: '#fff7ed',
+                        100: '#ffedd5',
+                        200: '#fed7aa',
+                        300: '#f9aa63',
+                        400: '#f98a27',
+                        500: '#f97900',
+                        600: '#e06d00',
+                        700: '#b45309',
+                    },
+                    forest: {
+                        DEFAULT: '#367159',
+                        light: '#8da063',
+                        50: '#f0f5ed',
+                        100: '#dce8d4',
+                        200: '#b9d1a6',
+                        300: '#8da063',
+                        400: '#6b8a4e',
+                        500: '#4e7a3a',
+                        600: '#367159',
+                        700: '#2a5a44',
+                    },
+                    warm: {
+                        bg: '#f5f2ef',
+                        card: '#FFFFFF',
+                        border: '#e5e1dc',
+                        50: '#faf8f5',
+                    },
+                },
+                fontFamily: {
+                    sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                },
+            },
+        },
+    }
+    </script>
+
+    <!-- Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {% block extra_head %}{% endblock %}
+
+    <style>
+        /* Smooth transitions for interactive elements */
+        .card-hover { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+        @media (hover: hover) {
+            .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 25px -5px rgba(0,0,0,0.1); }
+        }
+        .card-hover:active { transform: scale(0.98); }
+
+        /* Mobile menu transition */
+        .mobile-menu { transition: max-height 0.3s ease, opacity 0.3s ease; }
+        .mobile-menu.hidden { max-height: 0; opacity: 0; overflow: hidden; }
+        .mobile-menu.open { max-height: 300px; opacity: 1; }
+
+        /* Focus ring for accessibility */
+        *:focus-visible { outline: 2px solid #175268; outline-offset: 2px; border-radius: 4px; }
+
+        /* Pulse for urgency */
+        @keyframes urgentPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .urgent-pulse { animation: urgentPulse 2s ease-in-out infinite; }
+
+        /* Safe area for notched phones */
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+        }
+
+        /* Prevent text size adjust on orientation change */
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+        /* Tap highlight color */
+        * { -webkit-tap-highlight-color: rgba(23, 82, 104, 0.1); }
+    </style>
+</head>
+<body class="bg-white text-gray-800 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-prairie text-white px-4 py-2 rounded-md z-50">
+        Skip to content
+    </a>
+
+    <!-- Navigation -->
+    <header class="bg-white border-b border-warm-border sticky top-0 z-40">
+        <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+            <div class="flex items-center justify-between h-14 sm:h-16">
+                <!-- Logo -->
+                <a href="{% url 'pages:home' %}" class="flex items-center gap-1.5 sm:gap-2 text-prairie-700 font-bold text-lg sm:text-xl tracking-tight hover:text-prairie transition-colors">
+                    <img src="{% static 'img/MM-logo.svg' %}" alt="Market Mapper" class="w-9 h-9 sm:w-11 sm:h-11">
+                    <span>Market Mapper</span>
+                </a>
+
+                <!-- Desktop nav -->
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="{% url 'opportunities:list' %}" class="px-4 py-2 rounded-lg text-gray-600 hover:text-prairie hover:bg-prairie-50 font-medium transition-colors">
+                        Browse Markets
+                    </a>
+                    <a href="{% url 'blog:list' %}" class="px-4 py-2 rounded-lg text-gray-600 hover:text-prairie hover:bg-prairie-50 font-medium transition-colors">
+                        Guides
+                    </a>
+                    <a href="{% url 'stories:list' %}" class="px-4 py-2 rounded-lg text-gray-600 hover:text-prairie hover:bg-prairie-50 font-medium transition-colors">
+                        Vendor Stories
+                    </a>
+                    <a href="{% url 'pages:about' %}" class="px-4 py-2 rounded-lg text-gray-600 hover:text-prairie hover:bg-prairie-50 font-medium transition-colors">
+                        About
+                    </a>
+                    <a href="{% url 'pages:contact' %}" class="px-4 py-2 rounded-lg bg-harvest text-white hover:bg-harvest-700 font-medium transition-colors ml-2">
+                        Submit a Market
+                    </a>
+                </div>
+
+                <!-- Mobile hamburger -->
+                <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors" aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle menu">
+                    <svg id="menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                    <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="mobile-menu hidden lg:hidden pb-4">
+                <div class="flex flex-col gap-1 pt-3 border-t border-warm-border">
+                    <a href="{% url 'opportunities:list' %}" class="px-4 py-3.5 rounded-lg text-gray-700 hover:bg-prairie-50 hover:text-prairie font-medium text-base active:bg-prairie-100 transition-colors">
+                        Browse Markets
+                    </a>
+                    <a href="{% url 'blog:list' %}" class="px-4 py-3.5 rounded-lg text-gray-700 hover:bg-prairie-50 hover:text-prairie font-medium text-base active:bg-prairie-100 transition-colors">
+                        Guides
+                    </a>
+                    <a href="{% url 'stories:list' %}" class="px-4 py-3.5 rounded-lg text-gray-700 hover:bg-prairie-50 hover:text-prairie font-medium text-base active:bg-prairie-100 transition-colors">
+                        Vendor Stories
+                    </a>
+                    <a href="{% url 'pages:about' %}" class="px-4 py-3.5 rounded-lg text-gray-700 hover:bg-prairie-50 hover:text-prairie font-medium text-base active:bg-prairie-100 transition-colors">
+                        About
+                    </a>
+                    <a href="{% url 'pages:contact' %}" class="px-4 py-3.5 rounded-xl bg-harvest text-white hover:bg-harvest-700 font-semibold text-base text-center mt-2 active:bg-harvest-600 transition-colors shadow-sm">
+                        Submit a Market
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main content -->
+    <main id="main-content" class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-warm-border mt-auto">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-center md:text-left">
+                <!-- Brand -->
+                <div>
+                    <a href="{% url 'pages:home' %}" class="inline-flex items-center gap-2 text-prairie-700 font-bold text-lg">
+                        <img src="{% static 'img/MM-logo.svg' %}" alt="Market Mapper" class="w-10 h-10">
+                        Market Mapper
+                    </a>
+                    <p class="text-gray-500 text-sm mt-3 leading-relaxed">
+                        Manitoba vendor opportunities,<br>curated and verified.
+                    </p>
+                    <p class="text-gray-400 text-xs mt-4 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                        Made in Manitoba
+                    </p>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-3 text-sm uppercase tracking-wider">Explore</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'opportunities:list' %}" class="text-gray-500 hover:text-prairie transition-colors text-sm">Browse Markets</a></li>
+                        <li><a href="{% url 'blog:list' %}" class="text-gray-500 hover:text-prairie transition-colors text-sm">Guides & Tips</a></li>
+                        <li><a href="{% url 'stories:list' %}" class="text-gray-500 hover:text-prairie transition-colors text-sm">Vendor Stories</a></li>
+                        <li><a href="{% url 'pages:about' %}" class="text-gray-500 hover:text-prairie transition-colors text-sm">About</a></li>
+                        <li><a href="{% url 'pages:contact' %}" class="text-gray-500 hover:text-prairie transition-colors text-sm">Contact</a></li>
+                        <li><a href="{% url 'pages:contact' %}" class="text-gray-500 hover:text-prairie transition-colors text-sm">Submit a Market</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal -->
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-3 text-sm uppercase tracking-wider">Info</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'pages:privacy' %}" class="text-gray-500 hover:text-prairie transition-colors text-sm">Privacy Policy</a></li>
+                        <li><a href="{% url 'pages:contact' %}" class="text-gray-500 hover:text-prairie transition-colors text-sm">Terms of Use</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-warm-border mt-8 pt-6 text-center">
+                <p class="text-gray-400 text-sm">&copy; 2026 Market Mapper. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile menu script -->
+    <script>
+    (function() {
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const iconOpen = document.getElementById('menu-icon-open');
+        const iconClose = document.getElementById('menu-icon-close');
+
+        btn.addEventListener('click', function() {
+            const isOpen = !menu.classList.contains('hidden');
+            if (isOpen) {
+                menu.classList.add('hidden');
+                menu.classList.remove('open');
+                iconOpen.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+                btn.setAttribute('aria-expanded', 'false');
+            } else {
+                menu.classList.remove('hidden');
+                // Force reflow for transition
+                menu.offsetHeight;
+                menu.classList.add('open');
+                iconOpen.classList.add('hidden');
+                iconClose.classList.remove('hidden');
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        });
+    })();
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

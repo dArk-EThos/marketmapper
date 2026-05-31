@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load opportunity_tags %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description|default:page_title }}. Browse open vendor opportunities and apply today.{% endblock %}
+
+{% block og_tags %}
+<meta property="og:title" content="{{ page_title }} | Market Mapper">
+<meta property="og:description" content="{{ meta_description|default:page_title }}. Browse open vendor opportunities.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_CA">
+{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "{{ page_title|escapejs }}",
+    "description": "{{ meta_description|default:page_title|escapejs }}",
+    "url": "{{ request.build_absolute_uri }}",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Market Mapper"
+    }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero section -->
+<section class="bg-gradient-to-br from-prairie-700 via-prairie-600 to-prairie text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grain" width="60" height="60" patternUnits="userSpaceOnUse"><circle cx="30" cy="30" r="1.5" fill="white"/><circle cx="10" cy="10" r="1" fill="white"/><circle cx="50" cy="50" r="1" fill="white"/></pattern></defs><rect width="100%" height="100%" fill="url(#grain)"/></svg>
+    </div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 text-center relative z-10">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-3">
+            {{ page_title }}
+        </h1>
+        {% if description %}
+        <p class="text-base sm:text-lg text-prairie-100 max-w-2xl mx-auto leading-relaxed">
+            {{ description }}
+        </p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Stats bar -->
+<section class="bg-white border-b border-warm-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm">
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-prairie-50 text-prairie">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                </span>
+                <span class="font-semibold text-gray-900">{{ open_count }}</span>
+                <span class="text-gray-500">open opportunit{{ open_count|pluralize:"y,ies" }}</span>
+            </div>
+            {% if total_count and total_count != open_count %}
+            <div class="hidden sm:block w-px h-5 bg-warm-border"></div>
+            <div class="flex items-center gap-2 text-gray-500">
+                <span class="font-semibold text-gray-700">{{ total_count }}</span>
+                total listings
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+
+    <!-- Opportunities grid -->
+    {% if opportunities %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+        {% for opp in opportunities %}
+            {% include "components/opportunity_card.html" with opp=opp %}
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="flex items-center justify-center gap-1 py-8" aria-label="Pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}"
+           class="inline-flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium text-gray-600 bg-white border border-warm-border hover:bg-prairie-50 hover:text-prairie transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Previous
+        </a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg text-sm font-semibold bg-prairie text-white">
+                {{ num }}
+            </span>
+            {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+            <a href="?page={{ num }}"
+               class="inline-flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium text-gray-600 bg-white border border-warm-border hover:bg-prairie-50 hover:text-prairie transition-colors">
+                {{ num }}
+            </a>
+            {% elif num == page_obj.number|add:"-3" or num == page_obj.number|add:"3" %}
+            <span class="inline-flex items-center justify-center w-10 h-10 text-gray-400">…</span>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}"
+           class="inline-flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium text-gray-600 bg-white border border-warm-border hover:bg-prairie-50 hover:text-prairie transition-colors">
+            Next
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+        {% endif %}
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty state -->
+    <div class="text-center py-16">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-warm-bg mb-5">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+        <h2 class="text-xl font-semibold text-gray-700 mb-2">No opportunities right now</h2>
+        <p class="text-gray-500 mb-6">There are currently no open listings in this category. Check back soon!</p>
+        <a href="{% url 'opportunities:list' %}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-prairie text-white font-medium text-sm hover:bg-prairie-light transition-colors">
+            Browse All Markets
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Related categories -->
+    {% if related_categories %}
+    <section class="mt-12 pt-10 border-t border-warm-border">
+        <h2 class="text-xl font-bold text-gray-900 mb-5">Explore More Categories</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {% for cat in related_categories %}
+            <a href="{{ cat.url }}"
+               class="flex items-center gap-3 p-4 rounded-xl bg-white border border-warm-border hover:border-prairie-200 hover:bg-prairie-50 transition-colors group card-hover">
+                <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-prairie-50 text-prairie group-hover:bg-prairie group-hover:text-white transition-colors flex-shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </span>
+                <div>
+                    <p class="font-medium text-gray-900 group-hover:text-prairie transition-colors">{{ cat.title }}</p>
+                    {% if cat.count %}<p class="text-xs text-gray-500">{{ cat.count }} opportunit{{ cat.count|pluralize:"y,ies" }}</p>{% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Newsletter CTA -->
+    <section class="mt-12 pt-10">
+        <div class="bg-prairie-50 rounded-2xl px-5 sm:px-12 py-8 sm:py-12 text-center border border-prairie-100">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-prairie text-white mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Don't miss new opportunities</h2>
+            <p class="text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto text-sm sm:text-base">
+                Get notified when new {{ page_title|lower }} listings are posted. No spam, unsubscribe anytime.
+            </p>
+            {% include "components/newsletter_form.html" %}
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}

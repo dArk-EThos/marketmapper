@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block title %}{{ story.vendor_name }} — {{ story.title }}{% endblock %}
+{% block meta_description %}{{ story.title }} — {{ story.vendor_name }}{% if story.business_name %} of {{ story.business_name }}{% endif %} shares their Manitoba market vendor experience.{% endblock %}
+
+{% block og_tags %}
+<meta property="og:title" content="&ldquo;{{ story.title }}&rdquo; — {{ story.vendor_name }} | Market Mapper">
+<meta property="og:description" content="{{ story.vendor_name }}{% if story.business_name %} of {{ story.business_name }}{% endif %} shares their market vendor story.">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_CA">
+{% if story.published_date %}<meta property="article:published_time" content="{{ story.published_date|date:'Y-m-d' }}">{% endif %}
+{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ story.title|escapejs }}",
+    "description": "{{ story.vendor_name|escapejs }} shares their Manitoba market vendor experience.",
+    {% if story.published_date %}"datePublished": "{{ story.published_date|date:'Y-m-d' }}",{% endif %}
+    "author": {
+        "@type": "Person",
+        "name": "{{ story.vendor_name|escapejs }}"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Market Mapper"
+    }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Breadcrumbs -->
+    <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6 overflow-x-auto whitespace-nowrap" aria-label="Breadcrumb">
+        <a href="{% url 'pages:home' %}" class="hover:text-prairie transition-colors">Home</a>
+        <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <a href="{% url 'stories:list' %}" class="hover:text-prairie transition-colors">Vendor Stories</a>
+        <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <span class="text-gray-700 font-medium truncate">{{ story.vendor_name }}</span>
+    </nav>
+
+    <!-- Article layout: content + sidebar -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Main content -->
+        <article class="lg:col-span-2">
+            <div class="bg-white rounded-2xl border border-warm-border shadow-sm overflow-hidden">
+
+                <!-- Header -->
+                <div class="p-6 sm:p-8 border-b border-warm-border">
+                    <!-- Category badge -->
+                    <div class="mb-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
+                            {% if story.category == 'first_time' %}bg-prairie-50 text-prairie-600
+                            {% elif story.category == 'success' %}bg-forest-50 text-forest-600
+                            {% elif story.category == 'tips' %}bg-harvest-50 text-harvest-700
+                            {% else %}bg-warm-bg text-gray-600{% endif %}">
+                            {{ story.get_category_display }}
+                        </span>
+                    </div>
+
+                    <!-- Title as pull quote -->
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
+                        &ldquo;{{ story.title }}&rdquo;
+                    </h1>
+
+                    <!-- Vendor name + date -->
+                    <div class="flex items-center gap-3 mt-5">
+                        {% if story.photo_url %}
+                        <img src="{{ story.photo_url }}" alt="{{ story.vendor_name }}"
+                             class="w-12 h-12 rounded-full object-cover border-2 border-warm-border">
+                        {% else %}
+                        <div class="w-12 h-12 rounded-full bg-prairie-50 border-2 border-prairie-100 flex items-center justify-center text-prairie font-bold text-base flex-shrink-0">
+                            {{ story.vendor_name|make_list|first|upper }}
+                        </div>
+                        {% endif %}
+                        <div>
+                            <p class="font-semibold text-gray-900">{{ story.vendor_name }}</p>
+                            {% if story.business_name %}
+                            <p class="text-sm text-gray-500">{{ story.business_name }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if story.published_date %}
+                    <time datetime="{{ story.published_date|date:'Y-m-d' }}" class="block text-sm text-gray-400 mt-3">
+                        Published {{ story.published_date|date:"F j, Y" }}
+                    </time>
+                    {% endif %}
+                </div>
+
+                <!-- Body -->
+                <div class="p-6 sm:p-8">
+                    <div class="prose prose-gray max-w-none text-gray-700 leading-relaxed text-base sm:text-lg">
+                        {{ story.body|linebreaks }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back to stories -->
+            <div class="mt-8">
+                <a href="{% url 'stories:list' %}" class="inline-flex items-center gap-2 text-sm font-medium text-prairie hover:text-prairie-light transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    Back to Vendor Stories
+                </a>
+            </div>
+        </article>
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="bg-white rounded-2xl border border-warm-border shadow-sm overflow-hidden sticky top-20">
+                <!-- Vendor info card -->
+                <div class="p-6 border-b border-warm-border">
+                    <h2 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-4">About the Vendor</h2>
+
+                    <div class="space-y-4">
+                        <!-- Name -->
+                        <div class="flex items-start gap-3">
+                            <div class="mt-0.5 flex-shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-lg bg-prairie-50 text-prairie">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            </div>
+                            <div>
+                                <dt class="text-xs text-gray-500">Name</dt>
+                                <dd class="text-sm font-medium text-gray-900">{{ story.vendor_name }}</dd>
+                            </div>
+                        </div>
+
+                        <!-- Business -->
+                        {% if story.business_name %}
+                        <div class="flex items-start gap-3">
+                            <div class="mt-0.5 flex-shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-lg bg-prairie-50 text-prairie">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            </div>
+                            <div>
+                                <dt class="text-xs text-gray-500">Business</dt>
+                                <dd class="text-sm font-medium text-gray-900">{{ story.business_name }}</dd>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Region -->
+                        {% if story.region %}
+                        <div class="flex items-start gap-3">
+                            <div class="mt-0.5 flex-shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-lg bg-prairie-50 text-prairie">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <dt class="text-xs text-gray-500">Region</dt>
+                                <dd class="text-sm font-medium text-gray-900">{{ story.region.name }}</dd>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Category -->
+                        <div class="flex items-start gap-3">
+                            <div class="mt-0.5 flex-shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-lg bg-prairie-50 text-prairie">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                            </div>
+                            <div>
+                                <dt class="text-xs text-gray-500">Story Type</dt>
+                                <dd class="text-sm font-medium text-gray-900">{{ story.get_category_display }}</dd>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Markets mentioned -->
+                {% if story.markets_mentioned.all %}
+                <div class="p-6">
+                    <h2 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Markets Mentioned</h2>
+                    <ul class="space-y-2">
+                        {% for market in story.markets_mentioned.all %}
+                        <li>
+                            <a href="{{ market.get_absolute_url }}"
+                               class="flex items-center gap-2 text-sm text-prairie hover:text-prairie-light transition-colors group">
+                                <svg class="w-3.5 h-3.5 text-gray-400 group-hover:text-prairie-light transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                {{ market.opportunity_name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </aside>
+
+    </div>
+
+</div>
+
+{% endblock %}

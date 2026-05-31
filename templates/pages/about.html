@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}About{% endblock %}
+{% block meta_description %}Market Mapper is a curated directory of vendor opportunities across Manitoba — farmers markets, craft fairs, food festivals, and more.{% endblock %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
+
+    <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">About Market Mapper</h1>
+
+    <div class="prose prose-lg max-w-none">
+        <div class="bg-white rounded-2xl border border-warm-border p-6 sm:p-10 shadow-sm space-y-6 text-gray-700 leading-relaxed">
+
+            <p class="text-lg">
+                Market Mapper is a curated directory of vendor opportunities across Manitoba. We track farmers markets, craft fairs, food festivals, pop-up markets, and more — so you can spend less time searching and more time selling.
+            </p>
+
+            <p>
+                Every listing is verified against its source. We don't guess at dates, fees, or deadlines. If we're not sure, we say so.
+            </p>
+
+            <p>
+                Built in Manitoba, for Manitoba makers.
+            </p>
+
+            <!-- How it works -->
+            <div class="border-t border-warm-border pt-8 mt-8">
+                <h2 class="text-xl font-bold text-gray-900 mb-6">How It Works</h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-prairie-50 text-prairie mb-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 mb-1">We Find Them</h3>
+                        <p class="text-sm text-gray-500">We scan official sources, organizer pages, and community posts for vendor calls across Manitoba.</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-prairie-50 text-prairie mb-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 mb-1">We Verify Them</h3>
+                        <p class="text-sm text-gray-500">Every listing is checked against its source. We track dates, fees, deadlines, and application links.</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-prairie-50 text-prairie mb-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 mb-1">You Apply</h3>
+                        <p class="text-sm text-gray-500">Browse, filter, and apply directly through the organizer's link. No middleman.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What we're not -->
+            <div class="border-t border-warm-border pt-8 mt-8">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">What We're Not</h2>
+                <p>
+                    We're not an application platform. We don't handle payments, jury processes, or booth assignments. We're a directory — we help you find opportunities, and then we link you straight to the organizer. That's it.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Vendor Stories{% endblock %}
+{% block meta_description %}Real stories from Manitoba market vendors — first-timers, seasoned sellers, and everyone in between.{% endblock %}
+
+{% block content %}
+
+<!-- Hero banner -->
+<section class="bg-warm-bg border-b border-warm-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 text-center">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-prairie-50 text-prairie mb-5">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">Vendor Stories</h1>
+        <p class="text-gray-600 max-w-xl mx-auto text-base sm:text-lg leading-relaxed">
+            Real experiences from Manitoba market vendors — first-timers, seasoned sellers, and everyone in between.
+        </p>
+    </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+
+    <!-- Stories grid -->
+    {% if stories %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-10">
+        {% for story in stories %}
+        <article class="bg-white rounded-xl border border-warm-border card-hover flex flex-col overflow-hidden">
+            <div class="p-5 sm:p-6 flex flex-col flex-1">
+                <!-- Vendor photo / initials -->
+                <div class="flex items-center gap-3 mb-4">
+                    {% if story.photo_url %}
+                    <img src="{{ story.photo_url }}" alt="{{ story.vendor_name }}"
+                         class="w-12 h-12 rounded-full object-cover border-2 border-warm-border"
+                         loading="lazy">
+                    {% else %}
+                    <div class="w-12 h-12 rounded-full bg-prairie-50 border-2 border-prairie-100 flex items-center justify-center text-prairie font-bold text-base flex-shrink-0">
+                        {% with name_parts=story.vendor_name|truncatewords:2 %}
+                        {{ story.vendor_name|make_list|first|upper }}{% if " " in story.vendor_name %}{{ story.vendor_name|cut:" "|make_list|first|upper }}{% endif %}
+                        {% endwith %}
+                    </div>
+                    {% endif %}
+                    <div class="min-w-0">
+                        <p class="text-sm font-semibold text-gray-900 truncate">{{ story.vendor_name }}</p>
+                        {% if story.business_name %}
+                        <p class="text-xs text-gray-500 truncate">{{ story.business_name }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Title as pull quote -->
+                <blockquote class="text-lg font-semibold text-gray-900 leading-snug mb-3 flex-1">
+                    <a href="{{ story.get_absolute_url }}" class="hover:text-prairie transition-colors">
+                        &ldquo;{{ story.title }}&rdquo;
+                    </a>
+                </blockquote>
+
+                <!-- Category badge -->
+                <div class="mb-4">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                        {% if story.category == 'first_time' %}bg-prairie-50 text-prairie-600
+                        {% elif story.category == 'success' %}bg-forest-50 text-forest-600
+                        {% elif story.category == 'tips' %}bg-harvest-50 text-harvest-700
+                        {% else %}bg-warm-bg text-gray-600{% endif %}">
+                        {{ story.get_category_display }}
+                    </span>
+                </div>
+
+                <!-- Read more -->
+                <div class="pt-3 border-t border-warm-border mt-auto">
+                    <a href="{{ story.get_absolute_url }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-prairie hover:text-prairie-light transition-colors">
+                        Read their story
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="flex items-center justify-center gap-1 py-8" aria-label="Pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}"
+           class="inline-flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium text-gray-600 bg-white border border-warm-border hover:bg-prairie-50 hover:text-prairie transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Previous
+        </a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg text-sm font-semibold bg-prairie text-white">
+                {{ num }}
+            </span>
+            {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+            <a href="?page={{ num }}"
+               class="inline-flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium text-gray-600 bg-white border border-warm-border hover:bg-prairie-50 hover:text-prairie transition-colors">
+                {{ num }}
+            </a>
+            {% elif num == page_obj.number|add:"-3" or num == page_obj.number|add:"3" %}
+            <span class="inline-flex items-center justify-center w-10 h-10 text-gray-400">…</span>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}"
+           class="inline-flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium text-gray-600 bg-white border border-warm-border hover:bg-prairie-50 hover:text-prairie transition-colors">
+            Next
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+        {% endif %}
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty state -->
+    <div class="text-center py-20">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-warm-bg mb-5">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+        </div>
+        <h2 class="text-xl font-semibold text-gray-700 mb-2">No stories yet</h2>
+        <p class="text-gray-500 mb-6">Vendor stories are coming soon. Check back later!</p>
+        <a href="{% url 'pages:home' %}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-prairie text-white font-medium text-sm hover:bg-prairie-light transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            Back to Home
+        </a>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
