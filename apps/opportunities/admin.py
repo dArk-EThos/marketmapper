@@ -145,14 +145,15 @@ class OpportunityAdmin(ModelAdmin):
     list_display = (
         "opportunity_name",
         "city",
-        "region",
+        "region", 
         "opportunity_type",
         "status",
         "status_colored",
         "confidence_score",
         "confidence_colored",
+        "link_status_display",
         "application_deadline",
-        "is_publishable_display",
+        "is_publishable_display", 
         "last_checked",
     )
     list_filter = (
@@ -177,10 +178,11 @@ class OpportunityAdmin(ModelAdmin):
     # ── Detail view — readonly fields ──
     readonly_fields = (
         "date_found",
-        "last_checked",
+        "last_checked", 
         "created_at",
         "updated_at",
         "slug",
+        "link_status_display",
     )
 
     # ── Fieldsets (grouped into Unfold tabs) ──
@@ -237,11 +239,13 @@ class OpportunityAdmin(ModelAdmin):
             {
                 "fields": (
                     "application_url",
-                    "source_url",
+                    "source_url", 
                     "source_type",
                     "social_url",
+                    "link_status_display",
                 ),
                 "classes": ["tab"],
+                "description": "URLs for vendor applications and event information. Use 'Test Links' action to verify.",
             },
         ),
         (
@@ -297,9 +301,11 @@ class OpportunityAdmin(ModelAdmin):
     # ── Bulk actions ──
     actions = [
         "mark_as_open",
-        "mark_as_closed",
+        "mark_as_closed", 
         "mark_as_closing_soon",
         "update_last_checked",
+        "test_links",
+        "mark_links_need_research",
     ]
 
     @action(description="✅ Mark selected as Open")
@@ -327,6 +333,65 @@ class OpportunityAdmin(ModelAdmin):
             obj.save(update_fields=[])
             count += 1
         self.message_user(request, f"Refreshed last_checked for {count} record(s).")
+
+    @action(description="🔗 Test Links for Dead URLs")
+    def test_links(self, request, queryset):
+        """Test application_url and source_url for each selected opportunity."""
+        import requests
+        from requests.exceptions import RequestException
+        
+        results = {"working": 0, "broken": 0, "details": []}
+        
+        for opp in queryset:
+            urls_to_test = []
+            if opp.application_url:
+                urls_to_test.append(("Application", opp.application_url))
+            if opp.source_url:
+                urls_to_test.append(("Source", opp.source_url))
+                
+            for url_type, url in urls_to_test:
+                try:
+                    response = requests.get(url, timeout=10, allow_redirects=True)
+                    if response.status_code < 400:
+                        results["working"] += 1
+                        status = f"✅ {url_type}: {response.status_code}"
+                    else:
+                        results["broken"] += 1
+                        status = f"❌ {url_type}: {response.status_code}"
+                        # Add note to opportunity
+                        if not opp.notes:
+                            opp.notes = f"LINK CHECK: {url_type} URL returned {response.status_code}"
+                        else:
+                            opp.notes += f" | LINK CHECK: {url_type} URL returned {response.status_code}"
+                        opp.save()
+                except RequestException as e:
+                    results["broken"] += 1
+                    status = f"❌ {url_type}: Connection failed"
+                    # Add note to opportunity
+                    if not opp.notes:
+                        opp.notes = f"LINK CHECK: {url_type} URL connection failed"
+                    else:
+                        opp.notes += f" | LINK CHECK: {url_type} URL connection failed" 
+                    opp.save()
+                    
+                results["details"].append(f"{opp.opportunity_name}: {status}")
+        
+        message = f"Link test complete: {results['working']} working, {results['broken']} broken. Check 'Notes' field for broken links."
+        self.message_user(request, message)
+
+    @action(description="🔍 Mark as Needs Link Research")
+    def mark_links_need_research(self, request, queryset):
+        """Mark opportunities as needing link research in notes."""
+        count = 0
+        for opp in queryset:
+            if not opp.notes:
+                opp.notes = "ADMIN: Links need research - check for working vendor/application pages"
+            else:
+                opp.notes += " | ADMIN: Links need research"
+            opp.confidence_score = 3  # Mark as needing verification
+            opp.save()
+            count += 1
+        self.message_user(request, f"Marked {count} opportunities for link research.")
 
     # ── Custom display columns ──
 
@@ -366,3 +431,25 @@ class OpportunityAdmin(ModelAdmin):
     def is_publishable_display(self, obj):
         """Show a green check if the opportunity meets publishing criteria."""
         return obj.is_publishable()
+
+    @admin.display(description="Link Status")
+    def link_status_display(self, obj):
+        """Display quick link status indicators."""
+        status_parts = []
+        
+        if obj.application_url:
+            if "LINK CHECK" in (obj.notes or "") and ("404" in obj.notes or "failed" in obj.notes):
+                status_parts.append("❌ App URL")
+            else:
+                status_parts.append("🔗 App URL") 
+                
+        if obj.source_url:
+            if "LINK CHECK" in (obj.notes or "") and ("404" in obj.notes or "failed" in obj.notes):
+                status_parts.append("❌ Source")
+            else:
+                status_parts.append("🔗 Source")
+        
+        if not status_parts:
+            return "No URLs"
+            
+        return " | ".join(status_parts)
