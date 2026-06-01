@@ -4,7 +4,7 @@
 {% block extrahead %}
     {{ block.super }}
     
-    <!-- Match front-end exactly: Tailwind + Inter font + your color palette -->
+    <!-- Match front-end: Tailwind + Inter font + proper contrast -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
     tailwind.config = {
@@ -27,21 +27,14 @@
                     },
                     harvest: {
                         DEFAULT: '#f97900',
-                        light: '#f9aa63',
-                        50: '#fff7ed',
-                        100: '#ffedd5',
-                        200: '#fed7aa',
                         300: '#f9aa63',
-                        400: '#f98a27',
                         500: '#f97900',
                         600: '#e06d00',
-                        700: '#b45309',
                     },
                     warm: {
                         bg: '#f5f2ef',
                         card: '#FFFFFF',
                         border: '#e5e1dc',
-                        50: '#faf8f5',
                     },
                 },
                 fontFamily: {
@@ -52,164 +45,213 @@
     }
     </script>
     
-    <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        /* REMOVE ALL PURPLE GRADIENTS - Match front-end exactly */
+        /* READABILITY FIRST - Fix all contrast issues */
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
-            background: #f5f2ef !important; /* warm.bg - same as front-end */
+            background: #f5f2ef !important; /* warm.bg */
             color: #1f2937 !important;
         }
         
-        /* Remove purple/blue gradients from dashboard cards */
-        [style*="background: linear-gradient"],
-        [style*="background:linear-gradient"],
-        .bg-gradient-to-r,
-        .bg-gradient-to-br,
-        .from-blue-500,
-        .to-purple-600 {
-            background: #175268 !important; /* prairie.DEFAULT */
-        }
-        
-        /* Header - match front-end prairie dark header */
-        .header,
-        nav[class*="bg-"] {
-            background: #002537 !important; /* prairie.800 - same as front-end */
-            border-bottom: 1px solid #00334a !important; /* prairie.700 */
-        }
-        
-        /* Sidebar - clean white like front-end cards */
+        /* FIXED SIDEBAR - Always visible with proper contrast */
         .sidebar {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 280px !important;
+            height: 100vh !important;
             background: white !important;
             border-right: 1px solid #e5e1dc !important; /* warm.border */
+            z-index: 1000 !important;
+            overflow-y: auto !important;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1) !important;
         }
         
-        /* Main content area - transparent to show warm background */
-        .main {
+        /* SIDEBAR HEADER - Clean white with prairie text */
+        .sidebar .header,
+        .sidebar-header {
+            background: white !important;
+            padding: 1rem 1.5rem !important;
+            border-bottom: 1px solid #e5e1dc !important;
+        }
+        
+        .sidebar .logo,
+        .sidebar-logo {
+            color: #175268 !important; /* prairie.DEFAULT */
+            font-weight: 700 !important;
+            font-size: 1.25rem !important;
+        }
+        
+        /* NAVIGATION ITEMS - High contrast for readability */
+        .sidebar .nav-link,
+        .sidebar nav a,
+        .sidebar ul li a {
+            color: #374151 !important; /* Dark gray for excellent readability */
+            padding: 0.75rem 1.5rem !important;
+            display: block !important;
+            border-radius: 0.5rem !important;
+            margin: 0.25rem 0.75rem !important;
+            transition: all 0.2s ease !important;
+            font-weight: 500 !important;
+            text-decoration: none !important;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar nav a:hover,
+        .sidebar ul li a:hover {
+            background: #eef4f6 !important; /* prairie.50 */
+            color: #175268 !important; /* prairie.DEFAULT */
+            transform: translateX(4px) !important;
+        }
+        
+        .sidebar .nav-link.active,
+        .sidebar nav a.active,
+        .sidebar ul li a.active {
+            background: #175268 !important; /* prairie.DEFAULT */
+            color: white !important;
+            font-weight: 600 !important;
+        }
+        
+        /* SIDEBAR ICONS - Ensure visibility */
+        .sidebar .nav-link svg,
+        .sidebar .nav-link i,
+        .sidebar nav a svg,
+        .sidebar nav a i {
+            color: currentColor !important;
+            opacity: 0.8 !important;
+        }
+        
+        /* SEARCH BOX - High contrast */
+        .sidebar .search-box input,
+        .sidebar input[type="search"] {
+            background: #f8fafc !important;
+            border: 1px solid #e5e1dc !important;
+            color: #374151 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.5rem !important;
+            width: 100% !important;
+        }
+        
+        .sidebar .search-box input:focus,
+        .sidebar input[type="search"]:focus {
+            border-color: #175268 !important;
+            box-shadow: 0 0 0 2px rgba(23, 82, 104, 0.1) !important;
+            outline: none !important;
+        }
+        
+        .sidebar .search-box input::placeholder,
+        .sidebar input[type="search"]::placeholder {
+            color: #9ca3af !important;
+        }
+        
+        /* MAIN CONTENT - Always account for fixed sidebar */
+        .main,
+        .main-content,
+        #main {
+            margin-left: 280px !important; /* Always account for sidebar width */
+            min-height: 100vh !important;
             background: transparent !important;
         }
         
-        /* Dashboard cards - match front-end card styling exactly */
-        .card,
-        .bg-white,
-        .rounded-lg,
-        .shadow {
+        /* HEADER - Clean white, not dark */
+        .header,
+        .main-header {
             background: white !important;
-            border: 1px solid #e5e1dc !important; /* warm.border */
-            border-radius: 0.75rem !important;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            border-bottom: 1px solid #e5e1dc !important;
+            color: #175268 !important;
+            padding: 1rem 2rem !important;
+            margin-left: 0 !important; /* Header spans full width of content area */
         }
         
-        /* Remove purple from dashboard stats cards */
-        .stats-card,
+        .header h1,
+        .main-header h1 {
+            color: #175268 !important;
+            font-weight: 700 !important;
+        }
+        
+        /* DASHBOARD CARDS - Clean with excellent contrast */
+        .card,
         .dashboard-card {
             background: white !important;
+            border: 1px solid #e5e1dc !important;
+            border-radius: 0.75rem !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            color: #374151 !important;
         }
         
-        /* Dashboard card headers - use prairie instead of purple */
-        .card-header,
-        .bg-blue-500,
-        .bg-purple-600 {
-            background: #175268 !important; /* prairie.DEFAULT */
+        .card-header {
+            background: #175268 !important;
             color: white !important;
+            padding: 1rem 1.5rem !important;
+            border-radius: 0.75rem 0.75rem 0 0 !important;
         }
         
-        /* Buttons - match front-end button styling */
-        .btn-primary,
-        .button-primary,
-        .bg-blue-600 {
-            background: #175268 !important; /* prairie.DEFAULT */
-            border-color: #175268 !important;
+        .card-body {
+            padding: 1.5rem !important;
+            color: #374151 !important;
+        }
+        
+        /* BUTTONS - High contrast */
+        .btn-primary {
+            background: #175268 !important;
+            border: 2px solid #175268 !important;
             color: white !important;
+            font-weight: 600 !important;
+            padding: 0.75rem 1.5rem !important;
+            border-radius: 0.5rem !important;
         }
         
-        .btn-primary:hover,
-        .button-primary:hover {
-            background: #00334a !important; /* prairie.700 */
+        .btn-primary:hover {
+            background: #00334a !important;
             border-color: #00334a !important;
+            color: white !important;
         }
         
-        /* Secondary buttons - harvest orange */
         .btn-secondary {
-            background: #f97900 !important; /* harvest.DEFAULT */
-            border-color: #f97900 !important;
+            background: #f97900 !important;
+            border: 2px solid #f97900 !important;
             color: white !important;
+            font-weight: 600 !important;
         }
         
         .btn-secondary:hover {
-            background: #e06d00 !important; /* harvest.600 */
-        }
-        
-        /* Navigation - match front-end nav styling */
-        .nav-link {
-            color: #175268 !important; /* prairie.DEFAULT */
-            border-radius: 0.75rem !important;
-        }
-        
-        .nav-link:hover {
-            background: #eef4f6 !important; /* prairie.50 */
-            color: #00334a !important; /* prairie.700 */
-        }
-        
-        .nav-link.active {
-            background: #175268 !important; /* prairie.DEFAULT */
+            background: #e06d00 !important;
+            border-color: #e06d00 !important;
             color: white !important;
         }
         
-        /* Tables - clean white with warm borders */
+        /* TABLES - Excellent readability */
         .table,
         table {
             background: white !important;
-            border: 1px solid #e5e1dc !important; /* warm.border */
+            border: 1px solid #e5e1dc !important;
             border-radius: 0.75rem !important;
+            color: #374151 !important;
         }
         
         .table thead th {
-            background: #faf8f5 !important; /* warm.50 */
+            background: #f8fafc !important;
+            color: #175268 !important;
+            font-weight: 600 !important;
             border-bottom: 1px solid #e5e1dc !important;
-            color: #175268 !important; /* prairie.DEFAULT */
+            padding: 1rem !important;
         }
         
-        /* Form inputs - match front-end styling */
-        .form-control,
-        input[type="text"],
-        input[type="email"],
-        select,
-        textarea {
-            border: 1px solid #e5e1dc !important; /* warm.border */
-            border-radius: 0.75rem !important;
-            background: white !important;
+        .table tbody td {
+            color: #374151 !important;
+            padding: 1rem !important;
+            border-bottom: 1px solid #f1f5f9 !important;
         }
         
-        .form-control:focus,
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-color: #175268 !important; /* prairie.DEFAULT */
-            box-shadow: 0 0 0 2px rgba(23, 82, 104, 0.1) !important;
+        .table tbody tr:hover {
+            background: #f8fafc !important;
         }
         
-        /* Status badges - use your color scheme */
-        .badge-success {
-            background: #367159 !important; /* forest green */
-            color: white !important;
-        }
-        
-        .badge-warning {
-            background: #f97900 !important; /* harvest.DEFAULT */
-            color: white !important;
-        }
-        
-        .badge-info {
-            background: #175268 !important; /* prairie.DEFAULT */
-            color: white !important;
-        }
-        
-        /* Links - prairie blue */
+        /* LINKS - High contrast */
         a {
             color: #175268 !important;
         }
@@ -218,59 +260,98 @@
             color: #00334a !important;
         }
         
-        /* Alerts - match front-end alert styling */
-        .alert {
-            border-radius: 0.75rem !important;
-            border: 1px solid transparent !important;
+        /* FORM INPUTS - Excellent contrast */
+        .form-control,
+        input,
+        select,
+        textarea {
+            background: white !important;
+            border: 1px solid #e5e1dc !important;
+            color: #374151 !important;
+            border-radius: 0.5rem !important;
         }
         
-        .alert-info {
-            background: #eef4f6 !important; /* prairie.50 */
-            border-color: #d5e3e9 !important; /* prairie.100 */
-            color: #175268 !important;
+        .form-control:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #175268 !important;
+            box-shadow: 0 0 0 2px rgba(23, 82, 104, 0.1) !important;
+            outline: none !important;
         }
         
-        .alert-success {
-            background: #f0f5ed !important; /* forest.50 */
-            color: #367159 !important;
+        /* STATUS BADGES - Clear, readable */
+        .badge {
+            font-weight: 600 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 1rem !important;
+            font-size: 0.75rem !important;
         }
         
-        /* Dashboard welcome section - remove purple gradient */
-        .dashboard-welcome,
-        .welcome-section {
-            background: #175268 !important; /* prairie.DEFAULT instead of purple */
+        .badge-success {
+            background: #059669 !important;
             color: white !important;
-            border-radius: 0.75rem !important;
         }
         
-        /* Sidebar width adjustment for expanded state */
-        body:not(.sidebar-collapsed) .main {
-            margin-left: 280px !important; /* Adjust content when sidebar is open */
+        .badge-warning {
+            background: #f97900 !important;
+            color: white !important;
         }
         
-        /* Mobile responsive */
+        .badge-info {
+            background: #175268 !important;
+            color: white !important;
+        }
+        
+        /* MOBILE RESPONSIVE - Sidebar becomes overlay */
         @media (max-width: 768px) {
-            body:not(.sidebar-collapsed) .main {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                transition: transform 0.3s ease !important;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            
+            .main {
                 margin-left: 0 !important;
             }
         }
         
-        /* Custom scrollbar to match front-end */
-        ::-webkit-scrollbar {
-            width: 8px;
+        /* SCROLLBARS - Clean styling */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
         }
         
-        ::-webkit-scrollbar-track {
-            background: #f5f2ef; /* warm.bg */
+        .sidebar::-webkit-scrollbar-track {
+            background: #f1f5f9;
         }
         
-        ::-webkit-scrollbar-thumb {
-            background: #aac7d3; /* prairie.200 */
-            border-radius: 4px;
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
         }
         
-        ::-webkit-scrollbar-thumb:hover {
-            background: #7faabb; /* prairie.300 */
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* ENSURE TEXT IS ALWAYS READABLE */
+        * {
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+        }
+        
+        /* HIGH CONTRAST MODE SUPPORT */
+        @media (prefers-contrast: high) {
+            .sidebar .nav-link {
+                border: 1px solid #e5e1dc !important;
+            }
+            
+            .sidebar .nav-link:hover {
+                border-color: #175268 !important;
+            }
         }
     </style>
 {% endblock %}
