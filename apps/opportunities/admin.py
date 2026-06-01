@@ -142,10 +142,17 @@ class OpportunityAdmin(ModelAdmin):
     """
     
     # Ensure all permissions are enabled
-    has_add_permission = lambda self, request: True
-    has_change_permission = lambda self, request, obj=None: True
-    has_delete_permission = lambda self, request, obj=None: True
-    has_view_permission = lambda self, request, obj=None: True
+    def has_add_permission(self, request):
+        return True
+    
+    def has_change_permission(self, request, obj=None):
+        return True
+    
+    def has_delete_permission(self, request, obj=None):
+        return True
+        
+    def has_view_permission(self, request, obj=None):
+        return True
 
     # ── List view ──
     list_display = (
@@ -162,6 +169,7 @@ class OpportunityAdmin(ModelAdmin):
         "is_publishable_display", 
         "last_checked",
     )
+    list_display_links = ("opportunity_name",)  # Make opportunity name clickable for editing
     list_filter = (
         "status",
         "confidence_score",
