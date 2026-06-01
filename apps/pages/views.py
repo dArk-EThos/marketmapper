@@ -13,7 +13,9 @@ class HomePageView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         publishable = Opportunity.objects.filter(
-            confidence_score__gte=4, status__in=["open", "closing_soon"]
+            verification_status="verified",  # Only verified opportunities
+            confidence_score__gte=4, 
+            status__in=["open", "closing_soon"]
         ).select_related("region")
 
         today = timezone.now().date()

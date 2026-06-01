@@ -20,7 +20,11 @@ class OpportunityListView(ListView):
             super()
             .get_queryset()
             .select_related("region")
-            .filter(confidence_score__gte=4, status__in=["open", "closing_soon"])
+            .filter(
+                verification_status="verified",  # Only verified opportunities
+                confidence_score__gte=4, 
+                status__in=["open", "closing_soon"]
+            )
         )
 
         # Full-text search via ?q=
@@ -87,7 +91,11 @@ class OpportunityDetailView(DetailView):
             super()
             .get_queryset()
             .select_related("region")
-            .filter(confidence_score__gte=4, status__in=["open", "closing_soon"])
+            .filter(
+                verification_status="verified",  # Only verified opportunities
+                confidence_score__gte=4, 
+                status__in=["open", "closing_soon"]
+            )
         )
 
     def get_context_data(self, **kwargs):
@@ -97,7 +105,9 @@ class OpportunityDetailView(DetailView):
         # Related opportunities: same region or same type, exclude self
         related_qs = (
             Opportunity.objects.filter(
-                confidence_score__gte=4, status__in=["open", "closing_soon"]
+                verification_status="verified",  # Only verified opportunities
+                confidence_score__gte=4, 
+                status__in=["open", "closing_soon"]
             )
             .exclude(pk=opp.pk)
             .select_related("region")
@@ -137,7 +147,9 @@ class CategoryLandingView(ListView):
     def get_queryset(self):
         qs = (
             Opportunity.objects.filter(
-                confidence_score__gte=4, status__in=["open", "closing_soon"]
+                verification_status="verified",  # Only verified opportunities
+                confidence_score__gte=4, 
+                status__in=["open", "closing_soon"]
             )
             .select_related("region")
         )

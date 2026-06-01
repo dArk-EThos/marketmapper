@@ -9,6 +9,7 @@ class OpportunitySitemap(Sitemap):
 
     def items(self):
         return Opportunity.objects.filter(
+            verification_status="verified",  # Only verified opportunities
             confidence_score__gte=4,
             status__in=["open", "closing_soon"],
         )
