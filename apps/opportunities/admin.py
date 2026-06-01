@@ -140,6 +140,12 @@ class OpportunityAdmin(ModelAdmin):
     existing functionality: colored badges, bulk actions, fieldsets,
     and dashboard stats injection.
     """
+    
+    # Ensure all permissions are enabled
+    has_add_permission = lambda self, request: True
+    has_change_permission = lambda self, request, obj=None: True
+    has_delete_permission = lambda self, request, obj=None: True
+    has_view_permission = lambda self, request, obj=None: True
 
     # ── List view ──
     list_display = (

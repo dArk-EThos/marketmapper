@@ -147,12 +147,12 @@ UNFOLD = {
             "950": "#431e00",
         },
         "font": {
-            "subtle-light": "#6b7280",
-            "subtle-dark": "#9ca3af",
-            "default-light": "#1f2937",
-            "default-dark": "#f3f4f6",
-            "important-light": "#111827",
-            "important-dark": "#ffffff",
+            "subtle-light": "#4b5563",  # Darker subtle text for better contrast
+            "subtle-dark": "#9ca3af", 
+            "default-light": "#111827",  # Very dark default text
+            "default-dark": "#f9fafb",   # Light text on dark backgrounds
+            "important-light": "#000000",  # Pure black for important text
+            "important-dark": "#ffffff",   # Pure white for dark mode
         },
     },
     "SIDEBAR": {
@@ -223,5 +223,6 @@ UNFOLD = {
     },
     "STYLES": [
         "admin/css/elegant_admin.css",
+        "admin/css/admin-contrast-fix.css",
     ],
 }

@@ -1,0 +1,97 @@
+/* Market Mapper Admin - Improved Contrast */
+
+/* Ensure text is always readable on light backgrounds */
+.form-row label,
+.fieldset h2,
+.module caption,
+.section h2,
+th a {
+    color: #111827 !important;
+    font-weight: 600;
+}
+
+/* Form fields with better contrast */
+.form-row input[type="text"],
+.form-row input[type="url"],
+.form-row input[type="email"],
+.form-row textarea,
+.form-row select {
+    color: #111827 !important;
+    background-color: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+}
+
+/* Help text should be visible but not overwhelming */
+.help {
+    color: #4b5563 !important;
+    font-size: 13px;
+}
+
+/* Table text contrast improvements */
+.results td,
+.results th {
+    color: #111827 !important;
+}
+
+/* Ensure links are visible */
+.results a,
+.form-row a {
+    color: #2563eb !important;
+    text-decoration: underline;
+}
+
+.results a:hover,
+.form-row a:hover {
+    color: #1d4ed8 !important;
+}
+
+/* Status badges with better contrast */
+.admin-badge {
+    color: #ffffff !important;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* Error and success messages */
+.errorlist li {
+    color: #dc2626 !important;
+    font-weight: 500;
+}
+
+.messagelist .success {
+    color: #065f46 !important;
+    background-color: #d1fae5 !important;
+}
+
+.messagelist .error {
+    color: #dc2626 !important;
+    background-color: #fee2e2 !important;
+}
+
+/* Fieldset legends */
+fieldset h2,
+.module h2 {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+/* Navigation and sidebar improvements */
+.sidebar h2 {
+    color: #111827 !important;
+}
+
+/* Ensure all form labels are dark */
+label {
+    color: #111827 !important;
+}
+
+/* Tab navigation */
+.tabular .tab {
+    color: #4b5563 !important;
+}
+
+.tabular .tab.active {
+    color: #111827 !important;
+    font-weight: 600;
+}
