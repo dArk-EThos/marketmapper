@@ -87,10 +87,43 @@ th a {
 .form-row input[type="url"],
 .form-row input[type="email"],
 .form-row textarea,
-.form-row select {
+.form-row select,
+input[type="text"],
+input[type="url"], 
+input[type="email"],
+textarea,
+select {
     color: #111827 !important;
     background-color: #ffffff !important;
-    border: 1px solid #d1d5db !important;
+    border: 2px solid #6b7280 !important; /* Much darker border */
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+}
+
+/* Focus states for form fields */
+.form-row input:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
+    outline: none !important;
+}
+
+/* Form labels - make them much darker and larger */
+.form-row label,
+label {
+    color: #111827 !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+}
+
+/* Required field asterisks */
+.required {
+    color: #dc2626 !important;
+    font-weight: bold !important;
 }
 
 /* Help text should be visible but not overwhelming */
@@ -141,29 +174,44 @@ th a {
     background-color: #fee2e2 !important;
 }
 
-/* Fieldset legends */
+/* Fieldset legends and module headers */
 fieldset h2,
-.module h2 {
+.module h2,
+.fieldset h2 {
     color: #111827 !important;
-    font-weight: 700;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    border-bottom: 2px solid #e5e7eb !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 16px !important;
 }
 
-/* Navigation and sidebar improvements */
-.sidebar h2 {
-    color: #111827 !important;
+/* Tab navigation - make tabs clearly visible */
+.tabular .tab,
+.nav-tabs .nav-link {
+    color: #374151 !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    border: 1px solid #d1d5db !important;
+    background-color: #f9fafb !important;
 }
 
-/* Ensure all form labels are dark */
-label {
+.tabular .tab.active,
+.nav-tabs .nav-link.active {
     color: #111827 !important;
+    font-weight: 600 !important;
+    background-color: #ffffff !important;
+    border-bottom: 2px solid #2563eb !important;
 }
 
-/* Tab navigation */
-.tabular .tab {
-    color: #4b5563 !important;
+/* Form row spacing */
+.form-row {
+    margin-bottom: 16px !important;
+    padding: 12px !important;
 }
 
-.tabular .tab.active {
+/* Dropdown selects */
+select option {
     color: #111827 !important;
-    font-weight: 600;
+    background-color: #ffffff !important;
 }
