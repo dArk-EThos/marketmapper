@@ -22,6 +22,20 @@ from unfold.decorators import action
 from .models import Opportunity, Region
 
 
+# Custom mixin to ensure edit links work properly with Unfold
+class EditableMixin:
+    """Ensures admin list items are properly linked for editing."""
+    
+    def get_list_display_links(self, request, list_display):
+        """Force the first column to be editable even with Unfold."""
+        if self.list_display_links is None:
+            # Default behavior: make the first field clickable
+            if list_display:
+                return [list_display[0]]
+            return []
+        return self.list_display_links
+
+
 # ──────────────────────────────────────────────
 # Environment callback (referenced in UNFOLD settings)
 # ──────────────────────────────────────────────
@@ -132,7 +146,7 @@ class RegionAdmin(ModelAdmin):
 
 
 @admin.register(Opportunity)
-class OpportunityAdmin(ModelAdmin):
+class OpportunityAdmin(EditableMixin, ModelAdmin):
     """
     Full-featured admin for vendor opportunities.
 
