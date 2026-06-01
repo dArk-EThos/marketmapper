@@ -12,7 +12,9 @@ Provides:
 from datetime import timedelta
 
 from django.contrib import admin
+from django.contrib.admin import widgets  
 from django.db.models import Count
+from django.forms import Select
 from django.utils import timezone
 from django.utils.html import format_html
 
@@ -34,6 +36,12 @@ class EditableMixin:
                 return [list_display[0]]
             return []
         return self.list_display_links
+
+    def formfield_for_choice_field(self, db_field, request, **kwargs):
+        """Ensure choice fields use proper select widgets."""
+        if db_field.name == 'verification_status':
+            kwargs['widget'] = Select()
+        return super().formfield_for_choice_field(db_field, request, **kwargs)
 
 
 # ──────────────────────────────────────────────
