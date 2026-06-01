@@ -3,18 +3,88 @@
 
 {% block extrahead %}
     {{ block.super }}
+    
+    <!-- Tailwind CDN - same as front-end -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    prairie: {
+                        DEFAULT: '#175268',
+                        light: '#557686',
+                        50: '#eef4f6',
+                        100: '#d5e3e9',
+                        200: '#aac7d3',
+                        300: '#7faabb',
+                        400: '#5a8ea3',
+                        500: '#3a7189',
+                        600: '#175268',
+                        700: '#00334a',
+                        800: '#002537',
+                        900: '#001a28',
+                    },
+                    harvest: {
+                        DEFAULT: '#f97900',
+                        light: '#f9aa63',
+                        50: '#fff7ed',
+                        100: '#ffedd5',
+                        200: '#fed7aa',
+                        300: '#f9aa63',
+                        400: '#f98a27',
+                        500: '#f97900',
+                        600: '#e06d00',
+                        700: '#b45309',
+                    },
+                    forest: {
+                        DEFAULT: '#367159',
+                        light: '#8da063',
+                        50: '#f0f5ed',
+                        100: '#dce8d4',
+                        200: '#b9d1a6',
+                        300: '#8da063',
+                        400: '#6b8a4e',
+                        500: '#4e7a3a',
+                        600: '#367159',
+                        700: '#2a5a44',
+                    },
+                    warm: {
+                        bg: '#f5f2ef',
+                        card: '#FFFFFF',
+                        border: '#e5e1dc',
+                        50: '#faf8f5',
+                    },
+                },
+                fontFamily: {
+                    sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                },
+            },
+        },
+    }
+    </script>
+    
+    <!-- Inter font - same as front-end -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        /* Clean, subtle admin styling */
+        /* Match front-end styling exactly */
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-            background: #f8fafc !important;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+            background: #f5f2ef !important; /* warm.bg */
+            font-size: 16px !important;
+            line-height: 1.6 !important;
         }
         
-        /* Header enhancements */
+        /* Header styling - match front-end */
+        .header {
+            background: white !important;
+            border-bottom: 1px solid #e5e1dc !important; /* warm.border */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+        
         .header-logo {
             transition: all 0.2s ease !important;
         }
@@ -23,22 +93,23 @@
             opacity: 0.8 !important;
         }
         
+        /* Sidebar - match front-end navigation */
+        .sidebar {
+            background: white !important;
+            border-right: 1px solid #e5e1dc !important; /* warm.border */
+        }
+        
         /* Main content area */
         .main {
             background: transparent !important;
         }
         
-        /* Sidebar styling */
-        .sidebar {
-            background: white !important;
-            border-right: 1px solid #e5e7eb !important;
-        }
-        
-        /* Card styling for dashboard */
+        /* Cards - match front-end card styling */
         .card {
-            border-radius: 1rem !important;
+            background: #FFFFFF !important; /* warm.card */
+            border: 1px solid #e5e1dc !important; /* warm.border */
+            border-radius: 0.75rem !important;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-            border: 1px solid #f3f4f6 !important;
             transition: all 0.2s ease !important;
         }
         
@@ -47,118 +118,194 @@
             transform: translateY(-1px) !important;
         }
         
-        /* Button styling */
+        /* Button styling - match front-end buttons */
         .btn-primary {
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8) !important;
-            border: none !important;
+            background: #175268 !important; /* prairie.DEFAULT */
+            border: 2px solid #175268 !important;
             border-radius: 0.75rem !important;
             padding: 0.75rem 1.5rem !important;
             font-weight: 600 !important;
             transition: all 0.2s ease !important;
+            color: white !important;
         }
         
         .btn-primary:hover {
+            background: #00334a !important; /* prairie.700 */
+            border-color: #00334a !important;
             transform: translateY(-1px) !important;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+            box-shadow: 0 4px 12px rgba(23, 82, 104, 0.3) !important;
+            color: white !important;
         }
         
-        /* Form inputs */
-        .form-control {
+        /* Secondary button - harvest orange */
+        .btn-secondary {
+            background: #f97900 !important; /* harvest.DEFAULT */
+            border: 2px solid #f97900 !important;
             border-radius: 0.75rem !important;
-            border: 1px solid #d1d5db !important;
+            padding: 0.75rem 1.5rem !important;
+            font-weight: 600 !important;
+            transition: all 0.2s ease !important;
+            color: white !important;
+        }
+        
+        .btn-secondary:hover {
+            background: #e06d00 !important; /* harvest.600 */
+            border-color: #e06d00 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(249, 121, 0, 0.3) !important;
+            color: white !important;
+        }
+        
+        /* Form inputs - match front-end */
+        .form-control {
+            border: 1px solid #e5e1dc !important; /* warm.border */
+            border-radius: 0.75rem !important;
             padding: 0.75rem 1rem !important;
             transition: all 0.2s ease !important;
+            background: white !important;
+            font-family: inherit !important;
         }
         
         .form-control:focus {
-            border-color: #3b82f6 !important;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
+            border-color: #175268 !important; /* prairie.DEFAULT */
+            box-shadow: 0 0 0 2px rgba(23, 82, 104, 0.1) !important;
+            outline: none !important;
         }
         
-        /* Navigation improvements */
+        /* Navigation improvements - match front-end nav */
         .nav-link {
             border-radius: 0.75rem !important;
             margin: 0.25rem 0 !important;
             transition: all 0.2s ease !important;
+            color: #175268 !important; /* prairie.DEFAULT */
         }
         
         .nav-link:hover {
-            background: #f3f4f6 !important;
-            transform: translateX(4px) !important;
+            background: #eef4f6 !important; /* prairie.50 */
+            color: #00334a !important; /* prairie.700 */
         }
         
         .nav-link.active {
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8) !important;
+            background: #175268 !important; /* prairie.DEFAULT */
             color: white !important;
         }
         
-        /* Table improvements */
+        /* Table improvements - match front-end table styling */
         .table {
-            border-radius: 1rem !important;
+            background: white !important;
+            border: 1px solid #e5e1dc !important; /* warm.border */
+            border-radius: 0.75rem !important;
             overflow: hidden !important;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
         }
         
         .table thead th {
-            background: #f9fafb !important;
-            border-bottom: 1px solid #e5e7eb !important;
+            background: #faf8f5 !important; /* warm.50 */
+            border-bottom: 1px solid #e5e1dc !important; /* warm.border */
             font-weight: 600 !important;
-            color: #374151 !important;
+            color: #175268 !important; /* prairie.DEFAULT */
             padding: 1rem !important;
         }
         
         .table tbody tr:hover {
-            background: #f9fafb !important;
+            background: #faf8f5 !important; /* warm.50 */
         }
         
-        /* Status badges */
+        .table tbody td {
+            padding: 1rem !important;
+            border-bottom: 1px solid #f5f2ef !important; /* warm.bg */
+        }
+        
+        /* Status badges - match front-end badge styling */
         .badge {
             border-radius: 1rem !important;
             padding: 0.5rem 1rem !important;
             font-weight: 600 !important;
             font-size: 0.75rem !important;
             text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
         }
         
         .badge-success {
-            background: linear-gradient(45deg, #10b981, #059669) !important;
+            background: #367159 !important; /* forest.DEFAULT */
             color: white !important;
         }
         
         .badge-warning {
-            background: linear-gradient(45deg, #f59e0b, #d97706) !important;
+            background: #f97900 !important; /* harvest.DEFAULT */
             color: white !important;
+        }
+        
+        .badge-info {
+            background: #175268 !important; /* prairie.DEFAULT */
+            color: white !important;
+        }
+        
+        /* Links - match front-end link styling */
+        a {
+            color: #175268 !important; /* prairie.DEFAULT */
+            transition: color 0.2s ease !important;
+        }
+        
+        a:hover {
+            color: #00334a !important; /* prairie.700 */
+        }
+        
+        /* Alert styling - match front-end alerts */
+        .alert {
+            border-radius: 0.75rem !important;
+            padding: 1rem 1.5rem !important;
+            border: 1px solid transparent !important;
+        }
+        
+        .alert-success {
+            background: #f0f5ed !important; /* forest.50 */
+            border-color: #dce8d4 !important; /* forest.100 */
+            color: #367159 !important; /* forest.DEFAULT */
+        }
+        
+        .alert-warning {
+            background: #fff7ed !important; /* harvest.50 */
+            border-color: #ffedd5 !important; /* harvest.100 */
+            color: #b45309 !important; /* harvest.700 */
+        }
+        
+        .alert-info {
+            background: #eef4f6 !important; /* prairie.50 */
+            border-color: #d5e3e9 !important; /* prairie.100 */
+            color: #175268 !important; /* prairie.DEFAULT */
+        }
+        
+        /* Container improvements */
+        .container-fluid {
+            background: transparent !important;
         }
         
         /* Mobile responsiveness */
         @media (max-width: 768px) {
             .container-fluid {
-                padding: 0.5rem !important;
-            }
-            
-            .card {
-                margin-bottom: 1rem !important;
+                padding: 0.75rem !important;
             }
         }
         
-        /* Clean scrollbars */
+        /* Scrollbar styling - match front-end */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
         
         ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: #f5f2ef; /* warm.bg */
             border-radius: 4px;
         }
         
         ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
+            background: #aac7d3; /* prairie.200 */
             border-radius: 4px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
+            background: #7faabb; /* prairie.300 */
         }
     </style>
 {% endblock %}
