@@ -1,0 +1,513 @@
+{% extends "admin/base.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}
+    {{ super }}
+    <style>
+        /* Enhanced changelist styling for SaaS theme */
+        .changelist-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .changelist-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .changelist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .changelist-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        
+        .add-button {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 2rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 16px rgba(17, 153, 142, 0.3);
+        }
+        
+        .add-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(17, 153, 142, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .search-filters-container {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            align-items: end;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 2rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+        }
+        
+        .filter-button {
+            background: linear-gradient(45deg, #764ba2, #667eea);
+            color: white;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(118, 75, 162, 0.3);
+        }
+        
+        .results-table {
+            background: white;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f0f0;
+        }
+        
+        .results-table table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+        
+        .results-table thead {
+            background: linear-gradient(45deg, #f8f9ff, #f0f2ff);
+        }
+        
+        .results-table th {
+            padding: 1.5rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: #4a5568;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .results-table th:first-child {
+            border-radius: 1.5rem 0 0 0;
+        }
+        
+        .results-table th:last-child {
+            border-radius: 0 1.5rem 0 0;
+        }
+        
+        .results-table td {
+            padding: 1.25rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+        
+        .results-table tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        .results-table tbody tr:hover {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            transform: scale(1.002);
+        }
+        
+        .results-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .results-table tbody tr:last-child td:first-child {
+            border-radius: 0 0 0 1.5rem;
+        }
+        
+        .results-table tbody tr:last-child td:last-child {
+            border-radius: 0 0 1.5rem 0;
+        }
+        
+        .record-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+        
+        .record-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .status-published {
+            background: linear-gradient(45deg, #38ef7d, #11998e);
+            color: white;
+        }
+        
+        .status-draft {
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            color: white;
+        }
+        
+        .category-tag {
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            color: #667eea;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .date-text {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            padding: 1rem;
+        }
+        
+        .pagination a, .pagination span {
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .pagination a {
+            background: white;
+            color: #667eea;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .pagination a:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-1px);
+        }
+        
+        .pagination .this-page {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: 2px solid transparent;
+        }
+        
+        .results-count {
+            text-align: center;
+            margin: 1rem 0;
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .breadcrumbs {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .breadcrumbs a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .breadcrumbs a:hover {
+            color: #764ba2;
+        }
+        
+        .actions {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem;
+            border-radius: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .actions select {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 1rem;
+            background: white;
+            font-weight: 500;
+        }
+        
+        .actions button {
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .actions button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 16px rgba(255, 107, 107, 0.3);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="changelist-container">
+    {% if cl.breadcrumbs_title %}
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">🏠 Home</a>
+        <span>›</span>
+        <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.breadcrumbs_title }}</a>
+        <span>›</span>
+        <span>{{ cl.opts.verbose_name_plural|capfirst }}</span>
+    </div>
+    {% endif %}
+    
+    <div class="changelist-card">
+        <div class="changelist-header">
+            <h1 class="changelist-title">
+                {{ cl.opts.verbose_name_plural|capfirst }}
+            </h1>
+            {% if has_add_permission %}
+            <a href="{% url cl.opts|admin_urlname:'add' %}" class="add-button">
+                ➕ Add {{ cl.opts.verbose_name }}
+            </a>
+            {% endif %}
+        </div>
+        
+        {% if cl.has_filters or search_var %}
+        <div class="search-filters-container">
+            {% if search_var %}
+            <div class="search-box">
+                <form method="get">
+                    <input type="search" 
+                           name="{{ search_var }}" 
+                           value="{{ cl.query }}"
+                           placeholder="Search {{ cl.opts.verbose_name_plural|lower }}..." 
+                           aria-label="Search">
+                    {% for key, value in cl.params.items %}
+                        {% if key != search_var %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endif %}
+                    {% endfor %}
+                </form>
+            </div>
+            {% endif %}
+            
+            {% if cl.has_filters %}
+            <button class="filter-button" onclick="toggleFilters()">
+                🔽 Filters
+            </button>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% if action_form and actions_on_top and cl.show_admin_actions %}
+        <form method="post" class="actions">
+            {% csrf_token %}
+            <label for="action-select">Action:</label>
+            <select name="action" id="action-select">
+                <option value="">---------</option>
+                {% for choice in action_form.action.field.choices %}
+                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" name="index" value="{{ action_index }}">Go</button>
+        </form>
+        {% endif %}
+        
+        {% if cl.result_count %}
+        <div class="results-count">
+            {{ cl.result_count }} {{ cl.opts.verbose_name_plural|lower }}
+        </div>
+        
+        <div class="results-table">
+            <table>
+                <thead>
+                    <tr>
+                        {% if action_form and cl.show_admin_actions %}
+                            <th><input type="checkbox" id="action-toggle"></th>
+                        {% endif %}
+                        {% for header in result_headers %}
+                            <th>
+                                {% if header.sortable %}
+                                    <a href="{{ header.url_primary }}">{{ header.text|capfirst }}</a>
+                                {% else %}
+                                    {{ header.text|capfirst }}
+                                {% endif %}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                        <tr>
+                            {% if action_form and cl.show_admin_actions %}
+                                <td>
+                                    <input type="checkbox" name="_selected_action" value="{{ result.pk }}">
+                                </td>
+                            {% endif %}
+                            {% for item in result %}
+                                <td>
+                                    {% if forloop.first and not action_form %}
+                                        <a href="{% url cl.opts|admin_urlname:'change' result.pk|admin_urlquote %}" class="record-link">
+                                            {{ item }}
+                                        </a>
+                                    {% else %}
+                                        {% if 'status' in item|lower or 'published' in item|lower %}
+                                            <span class="status-badge status-{{ item|lower|slugify }}">
+                                                {{ item }}
+                                            </span>
+                                        {% elif 'category' in forloop.parentloop.counter0|add:"-1"|slice:":1" %}
+                                            <span class="category-tag">{{ item }}</span>
+                                        {% elif 'date' in item|lower or item|date:'Y-m-d' == item %}
+                                            <span class="date-text">{{ item }}</span>
+                                        {% else %}
+                                            {{ item }}
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if cl.result_count > cl.list_per_page %}
+        <div class="pagination">
+            {% if cl.result_count > cl.list_per_page %}
+                {% if cl.show_all %}
+                    <a href="{% url cl.opts|admin_urlname:'changelist' %}{% if cl.preserved_filters %}?{{ cl.preserved_filters }}{% endif %}">Show paginated</a>
+                {% else %}
+                    {% if cl.can_show_all %}
+                        <a href="?{% if cl.preserved_filters %}{{ cl.preserved_filters }}&amp;{% endif %}all=">Show all {{ cl.result_count }}</a>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            
+            {% if cl.formset and cl.result_count %}
+                {% if cl.formset.paginator.num_pages > 1 %}
+                    {% for i in cl.formset.paginator.page_range %}
+                        {% if cl.formset.page.number == i %}
+                            <span class="this-page">{{ i }}</span>
+                        {% else %}
+                            <a href="?{% if cl.preserved_filters %}{{ cl.preserved_filters }}&amp;{% endif %}p={{ i }}">{{ i }}</a>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <div style="text-align: center; padding: 3rem; color: #64748b;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+            <h3>No {{ cl.opts.verbose_name_plural|lower }} yet</h3>
+            <p>Get started by adding your first {{ cl.opts.verbose_name|lower }}.</p>
+            {% if has_add_permission %}
+            <a href="{% url cl.opts|admin_urlname:'add' %}" class="add-button" style="margin-top: 1rem; display: inline-flex;">
+                ➕ Add {{ cl.opts.verbose_name }}
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function toggleFilters() {
+    // Add filter toggle functionality if needed
+    console.log('Toggle filters');
+}
+
+// Enhanced checkbox functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleAll = document.getElementById('action-toggle');
+    const checkboxes = document.querySelectorAll('input[name="_selected_action"]');
+    
+    if (toggleAll) {
+        toggleAll.addEventListener('change', function() {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+        });
+    }
+});
+</script>
+{% endblock %}

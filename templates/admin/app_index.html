@@ -1,0 +1,274 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block title %}{{ app_label|capfirst|escape }} administration | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}
+    {{ super }}
+    <style>
+        .app-index-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .app-index-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .app-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .app-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 1rem 0;
+        }
+        
+        .app-description {
+            color: #64748b;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .model-card {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .model-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .model-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border-color: #e0e0e0;
+        }
+        
+        .model-card:hover::before {
+            opacity: 1;
+        }
+        
+        .model-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .model-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .model-description {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        
+        .model-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .model-action {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .model-action:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .model-action.add {
+            background: linear-gradient(45deg, #38ef7d, #11998e);
+        }
+        
+        .model-action.add:hover {
+            box-shadow: 0 4px 12px rgba(17, 153, 142, 0.3);
+        }
+        
+        .breadcrumbs {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .breadcrumbs a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .breadcrumbs a:hover {
+            color: #764ba2;
+        }
+        
+        .quick-stats {
+            background: linear-gradient(45deg, #f8f9ff, #f0f2ff);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="app-index-container">
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">🏠 Home</a>
+        <span>›</span>
+        <span>{{ app_label|capfirst }}</span>
+    </div>
+    
+    <div class="app-index-card">
+        <div class="app-header">
+            <h1 class="app-title">{{ app_label|capfirst }} Administration</h1>
+            <div class="app-description">
+                Manage your {{ app_label }} data, content, and settings
+            </div>
+        </div>
+        
+        {% if app_list %}
+            {% for app in app_list %}
+                {% if app.models %}
+                <div class="models-grid">
+                    {% for model in app.models %}
+                    <div class="model-card">
+                        <div class="model-icon">
+                            {% if 'blog' in model.object_name|lower %}📝
+                            {% elif 'post' in model.object_name|lower %}📄
+                            {% elif 'opportunity' in model.object_name|lower %}💼
+                            {% elif 'vendor' in model.object_name|lower %}🏪
+                            {% elif 'user' in model.object_name|lower %}👤
+                            {% elif 'category' in model.object_name|lower %}📂
+                            {% elif 'region' in model.object_name|lower %}🗺️
+                            {% elif 'contact' in model.object_name|lower %}📞
+                            {% else %}📋
+                            {% endif %}
+                        </div>
+                        
+                        <div class="model-name">{{ model.name }}</div>
+                        
+                        <div class="model-description">
+                            {% if 'blog' in model.object_name|lower %}
+                                Create and manage blog posts, articles, and content
+                            {% elif 'opportunity' in model.object_name|lower %}
+                                Vendor opportunities and procurement listings
+                            {% elif 'vendor' in model.object_name|lower %}
+                                Vendor profiles and business information
+                            {% elif 'user' in model.object_name|lower %}
+                                User accounts and authentication management
+                            {% elif 'category' in model.object_name|lower %}
+                                Organize content with categories and tags
+                            {% elif 'region' in model.object_name|lower %}
+                                Geographic regions and location management
+                            {% else %}
+                                Manage {{ model.name|lower }} data and settings
+                            {% endif %}
+                        </div>
+                        
+                        <div class="model-actions">
+                            {% if model.admin_url %}
+                            <a href="{{ model.admin_url }}" class="model-action">
+                                👁️ View all
+                            </a>
+                            {% endif %}
+                            
+                            {% if model.add_url %}
+                            <a href="{{ model.add_url }}" class="model-action add">
+                                ➕ Add new
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
