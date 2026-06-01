@@ -50,25 +50,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        /* READABILITY FIRST - Fix all contrast issues */
+        /* KEEP ALL THE GOOD READABILITY - Remove fixed sidebar */
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
             background: #f5f2ef !important; /* warm.bg */
             color: #1f2937 !important;
         }
         
-        /* FIXED SIDEBAR - Always visible with proper contrast */
+        /* SIDEBAR - Collapsible with excellent contrast */
         .sidebar {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 280px !important;
-            height: 100vh !important;
             background: white !important;
             border-right: 1px solid #e5e1dc !important; /* warm.border */
-            z-index: 1000 !important;
-            overflow-y: auto !important;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1) !important;
+            /* Remove fixed positioning - let Django Unfold handle collapse/expand */
         }
         
         /* SIDEBAR HEADER - Clean white with prairie text */
@@ -148,23 +141,21 @@
             color: #9ca3af !important;
         }
         
-        /* MAIN CONTENT - Always account for fixed sidebar */
+        /* MAIN CONTENT - Let Django Unfold handle responsive margins */
         .main,
         .main-content,
         #main {
-            margin-left: 280px !important; /* Always account for sidebar width */
-            min-height: 100vh !important;
             background: transparent !important;
+            /* Remove fixed margin - let Unfold handle this */
         }
         
-        /* HEADER - Clean white, not dark */
+        /* HEADER - Clean white */
         .header,
         .main-header {
             background: white !important;
             border-bottom: 1px solid #e5e1dc !important;
             color: #175268 !important;
             padding: 1rem 2rem !important;
-            margin-left: 0 !important; /* Header spans full width of content area */
         }
         
         .header h1,
@@ -301,22 +292,6 @@
         .badge-info {
             background: #175268 !important;
             color: white !important;
-        }
-        
-        /* MOBILE RESPONSIVE - Sidebar becomes overlay */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%) !important;
-                transition: transform 0.3s ease !important;
-            }
-            
-            .sidebar.open {
-                transform: translateX(0) !important;
-            }
-            
-            .main {
-                margin-left: 0 !important;
-            }
         }
         
         /* SCROLLBARS - Clean styling */
