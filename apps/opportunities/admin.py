@@ -38,29 +38,11 @@ class EditableMixin:
         return self.list_display_links
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
-        """Ensure choice fields use proper select widgets."""
-        if db_field.name == 'verification_status':
-            # Explicitly pass the choices to the widget
-            kwargs['widget'] = Select(
-                choices=db_field.choices,
-                attrs={'class': 'form-select verification-status-field'}
-            )
+        """Let Django handle choice fields naturally."""
+        # Remove custom widget override - let Django use default
         return super().formfield_for_choice_field(db_field, request, **kwargs)
 
-    def get_form(self, request, obj=None, **kwargs):
-        """Customize the form to ensure dropdown widgets.""" 
-        form = super().get_form(request, obj, **kwargs)
-        if 'verification_status' in form.base_fields:
-            # Get the field and explicitly set choices
-            field = form.base_fields['verification_status']
-            from apps.opportunities.models import Opportunity
-            choices = Opportunity.VERIFICATION_CHOICES
-            field.widget = Select(choices=choices, attrs={
-                'class': 'form-select verification-status-field',
-                'style': 'border: 2px solid #059669; background-color: #f0fdf4; font-weight: bold;'
-            })
-            field.choices = choices
-        return form
+    # Remove get_form override - let Django handle it
 
 
 # ──────────────────────────────────────────────
