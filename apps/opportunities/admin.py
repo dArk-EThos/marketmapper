@@ -176,6 +176,8 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
         "opportunity_type",
         "status",
         "status_colored",
+        "verification_status",
+        "verification_colored",
         "confidence_score",
         "confidence_colored",
         "link_status_display",
@@ -185,12 +187,14 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
     )
     list_display_links = ("opportunity_name",)  # Make opportunity name clickable for editing
     list_filter = (
+        "verification_status",
         "status",
         "confidence_score",
         "opportunity_type",
         "region",
-        "city",
         "indoor_outdoor",
+        "created_at",
+        "application_deadline",
     )
     search_fields = (
         "opportunity_name",
@@ -230,6 +234,7 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
                     "organizer_name",
                     "status",
                     "confidence_score",
+                    "verification_status",
                 ),
                 "classes": ["tab"],
                 "description": "Core opportunity details.",
@@ -334,6 +339,10 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
         "update_last_checked",
         "test_links",
         "mark_links_need_research",
+        "mark_as_verified",
+        "mark_as_pending",
+        "mark_as_unverified", 
+        "mark_as_rejected",
     ]
 
     @action(description="✅ Mark selected as Open")
@@ -481,3 +490,48 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
             return "No URLs"
             
         return " | ".join(status_parts)
+
+    # ── Verification Actions ──
+    
+    @action(description="✅ Mark as Verified (Public)")
+    def mark_as_verified(self, request, queryset):
+        """Mark opportunities as verified for public display."""
+        updated = queryset.update(verification_status="verified")
+        self.message_user(request, f"{updated} opportunities marked as Verified (will appear on public site).")
+
+    @action(description="⏳ Mark as Pending Review") 
+    def mark_as_pending(self, request, queryset):
+        """Mark opportunities as pending review."""
+        updated = queryset.update(verification_status="pending")
+        self.message_user(request, f"{updated} opportunities marked as Pending Review.")
+
+    @action(description="🔍 Mark as Unverified")
+    def mark_as_unverified(self, request, queryset):
+        """Mark opportunities as unverified (hidden from public)."""
+        updated = queryset.update(verification_status="unverified") 
+        self.message_user(request, f"{updated} opportunities marked as Unverified (hidden from public).")
+
+    @action(description="❌ Mark as Rejected")
+    def mark_as_rejected(self, request, queryset):
+        """Mark opportunities as rejected (permanently hidden)."""
+        updated = queryset.update(verification_status="rejected")
+        self.message_user(request, f"{updated} opportunities marked as Rejected (will not appear publicly).")
+
+    # ── Verification Display Methods ──
+    
+    @admin.display(description="Verification", ordering="verification_status")
+    def verification_colored(self, obj):
+        """Display colored verification status badge."""
+        badge = obj.get_verification_badge()
+        return format_html(
+            '<span class="admin-badge {}" style="background-color: {}; color: white; padding: 4px 8px; border-radius: 4px;">{} {}</span>',
+            badge["class"],
+            {
+                "badge-warning": "#f59e0b",   # Orange for unverified
+                "badge-info": "#3b82f6",      # Blue for pending  
+                "badge-success": "#10b981",   # Green for verified
+                "badge-danger": "#ef4444",    # Red for rejected
+            }.get(badge["class"], "#6b7280"),
+            badge["icon"],
+            badge["text"]
+        )

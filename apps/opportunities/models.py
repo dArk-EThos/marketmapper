@@ -82,6 +82,14 @@ class Opportunity(models.Model):
         (5, "5 - Very High"),
     ]
 
+    # --- Verification status choices ---
+    VERIFICATION_CHOICES = [
+        ("unverified", "🔍 Unverified"),
+        ("pending", "⏳ Pending Review"),
+        ("verified", "✅ Verified"), 
+        ("rejected", "❌ Rejected"),
+    ]
+
     # === Core fields ===
     opportunity_name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=280, unique=True)
@@ -124,6 +132,12 @@ class Opportunity(models.Model):
         max_length=20, choices=STATUS_CHOICES, default="tentative"
     )
     confidence_score = models.IntegerField(choices=CONFIDENCE_CHOICES, default=3)
+    verification_status = models.CharField(
+        max_length=20, 
+        choices=VERIFICATION_CHOICES, 
+        default="unverified",
+        help_text="Approval status for public display. Only 'Verified' opportunities appear on the public site."
+    )
 
     # === Logistics ===
     vendor_fee = models.CharField(max_length=255, blank=True)
@@ -212,7 +226,21 @@ class Opportunity(models.Model):
 
     def is_publishable(self):
         """Whether this opportunity should be shown publicly."""
-        return self.confidence_score >= 4 and self.status in ("open", "closing_soon")
+        return (
+            self.verification_status == "verified" and
+            self.confidence_score >= 4 and 
+            self.status in ("open", "closing_soon")
+        )
+
+    def get_verification_badge(self):
+        """Get the verification status badge for display."""
+        badges = {
+            "unverified": {"icon": "🔍", "text": "Unverified", "class": "badge-warning"},
+            "pending": {"icon": "⏳", "text": "Pending Review", "class": "badge-info"},
+            "verified": {"icon": "✅", "text": "Verified", "class": "badge-success"},
+            "rejected": {"icon": "❌", "text": "Rejected", "class": "badge-danger"},
+        }
+        return badges.get(self.verification_status, badges["unverified"])
 
     def get_absolute_url(self):
         return reverse(
