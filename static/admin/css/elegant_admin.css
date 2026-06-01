@@ -1,0 +1,368 @@
+/* Market Mapper Admin - Elegant SaaS Style */
+
+/* ===== ROOT VARIABLES ===== */
+:root {
+  /* Primary Brand Colors */
+  --mm-primary: #6366f1;
+  --mm-primary-light: #818cf8;
+  --mm-primary-dark: #4338ca;
+  
+  /* Accent Colors */
+  --mm-accent: #10b981;
+  --mm-accent-light: #34d399;
+  --mm-pink: #f472b6;
+  --mm-orange: #fb923c;
+  
+  /* Background Gradients */
+  --mm-bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --mm-card-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --mm-success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  
+  /* Neutral Colors */
+  --mm-gray-50: #f9fafb;
+  --mm-gray-100: #f3f4f6;
+  --mm-gray-200: #e5e7eb;
+  --mm-gray-300: #d1d5db;
+  --mm-gray-400: #9ca3af;
+  --mm-gray-500: #6b7280;
+  --mm-gray-600: #4b5563;
+  --mm-gray-700: #374151;
+  --mm-gray-800: #1f2937;
+  --mm-gray-900: #111827;
+  
+  /* Shadows & Effects */
+  --mm-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --mm-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --mm-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --mm-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --mm-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  
+  /* Border Radius */
+  --mm-rounded-sm: 0.25rem;
+  --mm-rounded: 0.5rem;
+  --mm-rounded-md: 0.75rem;
+  --mm-rounded-lg: 1rem;
+  --mm-rounded-xl: 1.25rem;
+  --mm-rounded-2xl: 1.5rem;
+  --mm-rounded-3xl: 2rem;
+}
+
+/* ===== GLOBAL OVERRIDES ===== */
+
+/* Main layout improvements */
+body {
+  background: var(--mm-bg-gradient) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  min-height: 100vh;
+}
+
+/* Header styling */
+.header {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 0 0 var(--mm-rounded-2xl) var(--mm-rounded-2xl) !important;
+  box-shadow: var(--mm-shadow-lg) !important;
+  border: none !important;
+}
+
+/* Sidebar enhancements */
+.sidebar {
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(20px) !important;
+  border-radius: 0 var(--mm-rounded-2xl) var(--mm-rounded-2xl) 0 !important;
+  box-shadow: var(--mm-shadow-xl) !important;
+  border: none !important;
+  margin: 1rem 0 1rem 1rem !important;
+  height: calc(100vh - 2rem) !important;
+}
+
+/* Main content area */
+.main {
+  background: transparent !important;
+  padding: 2rem !important;
+  margin-left: 1rem !important;
+}
+
+/* ===== CARD & CONTENT STYLING ===== */
+
+/* All cards get beautiful rounded styling */
+.card,
+.module,
+.results,
+.form-row,
+.form-horizontal,
+.change-list,
+.object-tools,
+.breadcrumbs {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: none !important;
+  border-radius: var(--mm-rounded-xl) !important;
+  box-shadow: var(--mm-shadow-md) !important;
+  backdrop-filter: blur(10px) !important;
+  margin-bottom: 1.5rem !important;
+  padding: 2rem !important;
+}
+
+/* Form improvements */
+.form-horizontal .form-row {
+  padding: 1.5rem !important;
+  margin: 1rem 0 !important;
+  border-radius: var(--mm-rounded-lg) !important;
+  background: var(--mm-gray-50) !important;
+  border: 1px solid var(--mm-gray-200) !important;
+  transition: all 0.3s ease !important;
+}
+
+.form-horizontal .form-row:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--mm-shadow-lg) !important;
+  background: white !important;
+}
+
+/* Input field styling */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="url"],
+input[type="number"],
+textarea,
+select {
+  border-radius: var(--mm-rounded-lg) !important;
+  border: 2px solid var(--mm-gray-200) !important;
+  padding: 0.75rem 1rem !important;
+  transition: all 0.3s ease !important;
+  background: white !important;
+  font-size: 0.95rem !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--mm-primary) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+  outline: none !important;
+  transform: scale(1.02) !important;
+}
+
+/* ===== BUTTON STYLING ===== */
+
+/* Primary buttons */
+.btn,
+.button,
+input[type="submit"],
+.submit-row input,
+.object-tools a {
+  background: linear-gradient(135deg, var(--mm-primary) 0%, var(--mm-primary-light) 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: var(--mm-rounded-lg) !important;
+  padding: 0.75rem 2rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: var(--mm-shadow) !important;
+  text-transform: none !important;
+  font-size: 0.9rem !important;
+}
+
+.btn:hover,
+.button:hover,
+input[type="submit"]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--mm-shadow-lg) !important;
+  background: linear-gradient(135deg, var(--mm-primary-dark) 0%, var(--mm-primary) 100%) !important;
+}
+
+/* Secondary buttons */
+.btn-secondary,
+.cancel-link {
+  background: var(--mm-gray-100) !important;
+  color: var(--mm-gray-700) !important;
+  border-radius: var(--mm-rounded-lg) !important;
+  padding: 0.75rem 1.5rem !important;
+}
+
+/* Success buttons */
+.btn-success {
+  background: var(--mm-success-gradient) !important;
+}
+
+/* Danger buttons */
+.btn-danger,
+.deletelink {
+  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important;
+}
+
+/* ===== TABLE STYLING ===== */
+
+/* Results table */
+.results table {
+  background: white !important;
+  border-radius: var(--mm-rounded-xl) !important;
+  overflow: hidden !important;
+  box-shadow: var(--mm-shadow-md) !important;
+  border: none !important;
+}
+
+.results th {
+  background: linear-gradient(135deg, var(--mm-gray-50) 0%, var(--mm-gray-100) 100%) !important;
+  color: var(--mm-gray-700) !important;
+  font-weight: 600 !important;
+  padding: 1.25rem 1rem !important;
+  border: none !important;
+  border-bottom: 2px solid var(--mm-gray-200) !important;
+}
+
+.results td {
+  padding: 1rem !important;
+  border-bottom: 1px solid var(--mm-gray-100) !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.results tr:hover td {
+  background: var(--mm-gray-50) !important;
+}
+
+/* ===== NAVIGATION ===== */
+
+/* Sidebar navigation */
+.sidebar a {
+  border-radius: var(--mm-rounded-lg) !important;
+  margin: 0.25rem 0.75rem !important;
+  padding: 0.75rem 1rem !important;
+  transition: all 0.3s ease !important;
+  color: var(--mm-gray-700) !important;
+}
+
+.sidebar a:hover,
+.sidebar a.current {
+  background: linear-gradient(135deg, var(--mm-primary) 0%, var(--mm-primary-light) 100%) !important;
+  color: white !important;
+  transform: translateX(4px) !important;
+  box-shadow: var(--mm-shadow) !important;
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  background: rgba(255, 255, 255, 0.9) !important;
+  padding: 1rem 2rem !important;
+  border-radius: var(--mm-rounded-xl) !important;
+  margin-bottom: 2rem !important;
+}
+
+.breadcrumbs a {
+  color: var(--mm-primary) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+/* ===== DASHBOARD ENHANCEMENTS ===== */
+
+/* Dashboard modules */
+.dashboard .module {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: var(--mm-rounded-xl) !important;
+  padding: 2rem !important;
+  margin: 1rem !important;
+  box-shadow: var(--mm-shadow-lg) !important;
+  transition: all 0.3s ease !important;
+}
+
+.dashboard .module:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--mm-shadow-xl) !important;
+}
+
+.dashboard .module h2 {
+  background: var(--mm-card-gradient) !important;
+  color: white !important;
+  margin: -2rem -2rem 1.5rem -2rem !important;
+  padding: 1.5rem 2rem !important;
+  border-radius: var(--mm-rounded-xl) var(--mm-rounded-xl) 0 0 !important;
+  font-weight: 600 !important;
+}
+
+/* Recent actions styling */
+.module ul li {
+  padding: 0.75rem 0 !important;
+  border-bottom: 1px solid var(--mm-gray-100) !important;
+  transition: all 0.2s ease !important;
+}
+
+.module ul li:hover {
+  background: var(--mm-gray-50) !important;
+  padding-left: 1rem !important;
+  border-radius: var(--mm-rounded) !important;
+}
+
+/* ===== STATUS & ALERTS ===== */
+
+/* Messages */
+.messagelist {
+  margin: 2rem 0 !important;
+}
+
+.messagelist li {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: none !important;
+  border-radius: var(--mm-rounded-xl) !important;
+  padding: 1.5rem 2rem !important;
+  margin: 1rem 0 !important;
+  box-shadow: var(--mm-shadow-md) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.messagelist .success {
+  background: var(--mm-success-gradient) !important;
+  color: white !important;
+}
+
+.messagelist .error {
+  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important;
+  color: white !important;
+}
+
+.messagelist .warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%) !important;
+  color: white !important;
+}
+
+/* ===== RESPONSIVE IMPROVEMENTS ===== */
+
+@media (max-width: 768px) {
+  .sidebar {
+    margin: 0.5rem !important;
+    border-radius: var(--mm-rounded-lg) !important;
+  }
+  
+  .main {
+    padding: 1rem !important;
+    margin-left: 0.5rem !important;
+  }
+  
+  .card,
+  .module {
+    margin: 0.5rem 0 !important;
+    padding: 1.5rem !important;
+  }
+}
+
+/* ===== ANIMATIONS ===== */
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Loading animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

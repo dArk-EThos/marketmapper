@@ -157,6 +157,7 @@ UNFOLD = {
     },
     "SIDEBAR": {
         "show_search": True,
+        "navigation_expanded": False,
         "show_all_applications": False,
         "navigation": [
             {
@@ -220,4 +221,7 @@ UNFOLD = {
             },
         ],
     },
+    "STYLES": [
+        "admin/css/elegant_admin.css",
+    ],
 }
