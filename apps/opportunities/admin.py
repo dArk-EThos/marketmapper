@@ -233,6 +233,7 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
         "updated_at",
         "slug",
         "link_status_display",
+        "verification_status_debug",  # Debug display
     )
 
     # ── Fieldsets (grouped into Unfold tabs) ──
@@ -248,6 +249,7 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
                     "opportunity_name",
                     "slug", 
                     "verification_status",  # Prominent at top
+                    "verification_status_debug",  # Debug display
                     "opportunity_type",
                     "vendor_categories",
                     "organizer_name",
@@ -552,4 +554,14 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
             }.get(badge["class"], "#6b7280"),
             badge["icon"],
             badge["text"]
+        )
+
+    @admin.display(description="Verification Debug")
+    def verification_status_debug(self, obj):
+        """Debug display to show verification status info."""
+        return format_html(
+            '<div style="background: yellow; padding: 10px; border: 2px solid red;"><strong>VERIFICATION STATUS: {}</strong><br>Field exists: {}<br>Raw value: {}</div>',
+            obj.get_verification_status_display() if hasattr(obj, 'get_verification_status_display') else 'NO METHOD',
+            'verification_status' in [f.name for f in obj._meta.get_fields()],
+            getattr(obj, 'verification_status', 'NO FIELD')
         )
