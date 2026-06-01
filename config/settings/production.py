@@ -9,6 +9,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
+# CSRF settings for production domains
+CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", default=[])
+
 DATABASES = {
     "default": env.db("DATABASE_URL"),
 }
