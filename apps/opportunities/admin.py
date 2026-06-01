@@ -40,8 +40,15 @@ class EditableMixin:
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         """Ensure choice fields use proper select widgets."""
         if db_field.name == 'verification_status':
-            kwargs['widget'] = Select()
+            kwargs['widget'] = Select(attrs={'class': 'form-select'})
         return super().formfield_for_choice_field(db_field, request, **kwargs)
+
+    def get_form(self, request, obj=None, **kwargs):
+        """Customize the form to ensure dropdown widgets.""" 
+        form = super().get_form(request, obj, **kwargs)
+        if 'verification_status' in form.base_fields:
+            form.base_fields['verification_status'].widget = Select(attrs={'class': 'form-select'})
+        return form
 
 
 # ──────────────────────────────────────────────
