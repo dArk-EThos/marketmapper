@@ -21,6 +21,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon-16.png' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/apple-touch-icon.png' %}">
 
+    <!-- Preload critical resources -->
+    {% block preload %}{% endblock %}
+
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>

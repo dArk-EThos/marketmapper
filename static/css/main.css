@@ -13,3 +13,30 @@ body {
     margin: 0 auto;
     padding: 1rem;
 }
+
+/* Hero Section Styles */
+.hero-bg {
+    /* Ensure proper stacking context */
+    position: relative;
+    z-index: 0;
+}
+
+/* Mobile-optimized hero image */
+.hero-bg img {
+    /* Better mobile performance */
+    will-change: transform;
+    transform: translateZ(0); /* Force hardware acceleration */
+}
+
+/* Fallback for when image fails to load */
+.hero-bg .bg-prairie-800 {
+    /* This solid background shows if image fails */
+    background-color: #0e3a4a;
+}
+
+/* Ensure gradient overlay works on all devices */
+@supports not (backdrop-filter: blur(1px)) {
+    .hero-bg .bg-gradient-to-br {
+        background: linear-gradient(135deg, rgba(14, 58, 74, 0.88) 0%, rgba(9, 38, 49, 0.92) 100%);
+    }
+}
