@@ -47,7 +47,10 @@ class EditableMixin:
         """Customize the form to ensure dropdown widgets.""" 
         form = super().get_form(request, obj, **kwargs)
         if 'verification_status' in form.base_fields:
-            form.base_fields['verification_status'].widget = Select(attrs={'class': 'form-select'})
+            form.base_fields['verification_status'].widget = Select(attrs={
+                'class': 'form-select verification-status-field',
+                'style': 'border: 2px solid #059669; background-color: #f0fdf4; font-weight: bold;'
+            })
         return form
 
 
@@ -243,16 +246,16 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
             {
                 "fields": (
                     "opportunity_name",
-                    "slug",
+                    "slug", 
+                    "verification_status",  # Prominent at top
                     "opportunity_type",
                     "vendor_categories",
                     "organizer_name",
                     "status",
                     "confidence_score",
-                    "verification_status",
                 ),
                 "classes": ["tab"],
-                "description": "Core opportunity details.",
+                "description": "Core opportunity details. Set Verification Status to control public visibility.",
             },
         ),
         (
