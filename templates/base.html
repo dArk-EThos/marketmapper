@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>{% block title %}Market Mapper{% endblock %} | Manitoba Vendor Opportunities</title>
     <meta name="description" content="{% block meta_description %}Find farmers markets, craft fairs, food festivals, and vendor opportunities across Manitoba.{% endblock %}">
 
@@ -21,12 +21,31 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon-16.png' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/apple-touch-icon.png' %}">
 
-    <!-- Tailwind CDN -->
+    <!-- 2026 Mobile Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CDN with enhanced mobile config -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
     tailwind.config = {
         theme: {
             extend: {
+                screens: {
+                    'xs': '475px',
+                    'sm': '640px',
+                    'md': '768px',
+                    'lg': '1024px',
+                    'xl': '1280px',
+                    '2xl': '1536px',
+                    // 2026 mobile breakpoints
+                    'fold': '344px', // Galaxy Fold
+                    'mini': '390px', // iPhone mini
+                    'standard': '414px', // iPhone standard
+                    'plus': '428px', // iPhone Plus
+                    'max': '480px'  // Large phones
+                },
                 colors: {
                     prairie: {
                         DEFAULT: '#175268',
@@ -56,15 +75,10 @@
                     },
                     forest: {
                         DEFAULT: '#367159',
-                        light: '#8da063',
                         50: '#f0f5ed',
-                        100: '#dce8d4',
-                        200: '#b9d1a6',
-                        300: '#8da063',
-                        400: '#6b8a4e',
-                        500: '#4e7a3a',
-                        600: '#367159',
-                        700: '#2a5a44',
+                        100: '#e1f5db',
+                        500: '#367159',
+                        600: '#2d5a47',
                     },
                     warm: {
                         bg: '#f5f2ef',
@@ -74,49 +88,221 @@
                     },
                 },
                 fontFamily: {
-                    sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
                 },
-                letterSpacing: {
-                    'widest-plus': '0.15em',
-                    'ultra': '0.2em',
+                fontSize: {
+                    // 2026 Mobile-optimized typography scale
+                    'xs': ['0.75rem', { lineHeight: '1rem' }],
+                    'sm': ['0.875rem', { lineHeight: '1.25rem' }],
+                    'base': ['1rem', { lineHeight: '1.5rem' }],
+                    'lg': ['1.125rem', { lineHeight: '1.75rem' }],
+                    'xl': ['1.25rem', { lineHeight: '1.75rem' }],
+                    '2xl': ['1.5rem', { lineHeight: '2rem' }],
+                    '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
+                    '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+                    '5xl': ['3rem', { lineHeight: '1.1' }],
+                    '6xl': ['3.75rem', { lineHeight: '1.1' }],
+                    '7xl': ['4.5rem', { lineHeight: '1.1' }],
+                    '8xl': ['6rem', { lineHeight: '1.1' }],
+                    '9xl': ['8rem', { lineHeight: '1.1' }],
                 },
-                height: {
+                spacing: {
+                    // Enhanced mobile spacing
                     '18': '4.5rem',
-                    '20': '5rem',
+                    '88': '22rem',
+                    '128': '32rem',
                 },
             },
         },
     }
     </script>
 
-    <!-- Inter font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    {% block extra_head %}{% endblock %}
-
     <style>
-        /* Mobile-first: 18px base for premium readability */
-        html {
-            scroll-behavior: smooth;
-        }
-        @media (max-width: 639px) {
-            html { font-size: 18px; }
-        }
-
-        /* Body text: 150% line-height for premium feel */
+        /* 2026 Mobile-First Critical CSS */
         body {
-            line-height: 1.5;
-        }
-        @media (max-width: 639px) {
-            body { line-height: 1.5; }
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Smooth transitions for interactive elements */
-        .card-hover { transition: transform 0.15s ease, box-shadow 0.15s ease; }
-        @media (hover: hover) {
-            .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 25px -5px rgba(0,0,0,0.1); }
+        /* Enhanced mobile touch targets */
+        .touch-target {
+            min-height: 44px; /* iOS HIG minimum */
+            min-width: 44px;
+        }
+
+        /* Core Web Vitals optimization */
+        img {
+            content-visibility: auto;
+        }
+
+        /* 2026 Mobile spacing standards */
+        .mobile-content {
+            padding-left: 1.5rem;  /* 24px mobile minimum */
+            padding-right: 1.5rem;
+            padding-top: 2rem;     /* 32px vertical spacing */
+            padding-bottom: 2rem;
+        }
+
+        @media (min-width: 640px) {
+            .mobile-content {
+                padding-left: 2rem;   /* 32px tablet+ */
+                padding-right: 2rem;
+                padding-top: 3rem;    /* 48px vertical spacing */
+                padding-bottom: 3rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-content {
+                padding-left: 3rem;   /* 48px desktop */
+                padding-right: 3rem;
+                padding-top: 4rem;    /* 64px vertical spacing */
+                padding-bottom: 4rem;
+            }
+        }
+
+        /* Enhanced readability typography */
+        .prose-enhanced {
+            --tw-prose-body: #374151;
+            --tw-prose-headings: #111827;
+            --tw-prose-links: #175268;
+            --tw-prose-bold: #111827;
+            --tw-prose-counters: #6b7280;
+            --tw-prose-bullets: #d1d5db;
+            --tw-prose-hr: #e5e7eb;
+            --tw-prose-quotes: #111827;
+            --tw-prose-quote-borders: #e5e7eb;
+            --tw-prose-captions: #6b7280;
+            --tw-prose-code: #111827;
+            --tw-prose-pre-code: #e5e7eb;
+            --tw-prose-pre-bg: #1f2937;
+            --tw-prose-th-borders: #d1d5db;
+            --tw-prose-td-borders: #e5e7eb;
+            --tw-prose-invert-body: #d1d5db;
+            --tw-prose-invert-headings: #fff;
+            --tw-prose-invert-links: #60a5fa;
+            --tw-prose-invert-bold: #fff;
+            --tw-prose-invert-counters: #9ca3af;
+            --tw-prose-invert-bullets: #4b5563;
+            --tw-prose-invert-hr: #374151;
+            --tw-prose-invert-quotes: #f3f4f6;
+            --tw-prose-invert-quote-borders: #374151;
+            --tw-prose-invert-captions: #9ca3af;
+            --tw-prose-invert-code: #fff;
+            --tw-prose-invert-pre-code: #d1d5db;
+            --tw-prose-invert-pre-bg: rgba(0, 0, 0, 0.5);
+            --tw-prose-invert-th-borders: #4b5563;
+            --tw-prose-invert-td-borders: #374151;
+            font-size: 1.125rem;
+            line-height: 1.75;
+        }
+
+        .prose-enhanced p {
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .prose-enhanced h1 {
+            color: var(--tw-prose-headings);
+            font-weight: 800;
+            font-size: 2.25rem;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            line-height: 1.111111;
+        }
+
+        .prose-enhanced h2 {
+            color: var(--tw-prose-headings);
+            font-weight: 700;
+            font-size: 1.875rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.333333;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .prose-enhanced h3 {
+            color: #175268;
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Mobile image optimization */
+        .mobile-image {
+            width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 640px) {
+            .mobile-image {
+                margin-left: -1.5rem;
+                margin-right: -1.5rem;
+                width: calc(100% + 3rem);
+                border-radius: 0;
+            }
+        }
+
+        /* Enhanced card components */
+        .content-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Call-out boxes */
+        .callout {
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-left: 4px solid;
+        }
+
+        .callout-info {
+            background: linear-gradient(135deg, #eef4f6 0%, #f0f9ff 100%);
+            border-left-color: #175268;
+        }
+
+        .callout-success {
+            background: linear-gradient(135deg, #f0f5ed 0%, #f0fdf4 100%);
+            border-left-color: #367159;
+        }
+
+        .callout-warning {
+            background: linear-gradient(135deg, #fff7ed 0%, #fffbeb 100%);
+            border-left-color: #f97900;
+        }
+
+        /* Mobile navigation improvements */
+        .mobile-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(0, 37, 55, 0.95);
+        }
+
+        /* Smooth interactions */
+        .card-hover {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-hover:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         .card-hover:active { transform: scale(0.98); }
 
@@ -139,7 +325,11 @@
         }
 
         /* Focus ring for accessibility */
-        *:focus-visible { outline: 2px solid #f97900; outline-offset: 2px; border-radius: 2px; }
+        *:focus-visible { 
+            outline: 2px solid #f97900; 
+            outline-offset: 2px; 
+            border-radius: 2px; 
+        }
 
         /* Pulse for urgency */
         @keyframes urgentPulse {
@@ -167,15 +357,14 @@
             content: '';
             position: absolute;
             bottom: 0;
-            left: 50%;
+            left: 0;
             width: 0;
             height: 2px;
             background: #f97900;
-            transition: width 0.3s ease, left 0.3s ease;
+            transition: width 0.3s ease;
         }
         .nav-link-premium:hover::after {
             width: 100%;
-            left: 0;
         }
 
         /* Back to top smooth hover */
@@ -184,6 +373,25 @@
         }
         .back-to-top:hover {
             transform: translateY(-2px);
+        }
+
+        /* 2026 Viewport Segments API for foldable devices */
+        @media (horizontal-viewport-segments: 2) {
+            .fold-aware {
+                margin-left: env(viewport-segment-width 0 0);
+                margin-right: env(viewport-segment-width 1 0);
+            }
+        }
+
+        /* Mobile performance optimizations */
+        @media (max-width: 768px) {
+            * {
+                scroll-behavior: auto !important;
+            }
+            
+            .will-change-transform {
+                will-change: transform;
+            }
         }
     </style>
 </head>
@@ -194,14 +402,15 @@
         Skip to content
     </a>
 
-    <!-- Navigation — dark sticky header -->
-    <header class="bg-prairie-800 sticky top-0 z-40 shadow-lg">
-        <nav class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8" aria-label="Main navigation">
+    <!-- Navigation — dark sticky header with enhanced mobile support -->
+    <header class="mobile-nav sticky top-0 z-40 shadow-lg">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
             <div class="flex items-center justify-between h-16 md:h-18 lg:h-20">
-                <!-- Logo -->
-                <a href="{% url 'pages:home' %}" class="flex items-center gap-3 sm:gap-4 text-white font-bold text-xl sm:text-2xl lg:text-2xl tracking-tight hover:text-harvest-300 transition-colors duration-200">
-                    <img src="{% static 'img/MM-logo.svg' %}" alt="Market Mapper" class="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16">
-                    <span>Market Mapper</span>
+                <!-- Logo - Enhanced for mobile visibility -->
+                <a href="{% url 'pages:home' %}" class="flex items-center gap-3 sm:gap-4 text-white font-bold text-lg sm:text-xl lg:text-2xl tracking-tight hover:text-harvest-300 transition-colors duration-200">
+                    <img src="{% static 'img/MM-logo.svg' %}" alt="Market Mapper" class="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14">
+                    <span class="hidden xs:inline">Market Mapper</span>
+                    <span class="inline xs:hidden">MM</span>
                 </a>
 
                 <!-- Desktop nav -->
@@ -218,13 +427,13 @@
                     <a href="{% url 'pages:about' %}" class="nav-link-premium px-4 py-2 text-white/80 hover:text-white font-medium tracking-wide uppercase text-sm transition-colors duration-200">
                         About
                     </a>
-                    <a href="{% url 'pages:contact' %}" class="ml-4 px-6 py-2.5 bg-harvest text-white hover:bg-harvest-600 font-semibold uppercase text-sm tracking-widest rounded-sm transition-colors duration-200 shadow-md hover:shadow-lg">
+                    <a href="{% url 'pages:contact' %}" class="ml-4 px-6 py-2.5 bg-harvest text-white hover:bg-harvest-600 font-semibold uppercase text-sm tracking-widest rounded-sm transition-colors duration-200 shadow-md hover:shadow-lg touch-target">
                         Submit a Market
                     </a>
                 </div>
 
-                <!-- Mobile hamburger — 44px touch target -->
-                <button id="mobile-menu-btn" class="lg:hidden flex items-center justify-center w-11 h-11 -mr-1 text-white hover:text-harvest-300 transition-colors duration-200" aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle menu">
+                <!-- Mobile hamburger — Enhanced touch target -->
+                <button id="mobile-menu-btn" class="lg:hidden flex items-center justify-center w-12 h-12 -mr-1 text-white hover:text-harvest-300 transition-colors duration-200 touch-target" aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle menu">
                     <svg id="menu-icon-open" class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
@@ -235,25 +444,28 @@
             </div>
         </nav>
 
-        <!-- Mobile menu — full-screen overlay -->
-        <div id="mobile-menu" class="mobile-menu-overlay fixed inset-0 top-16 bg-prairie-900/[0.98] lg:hidden z-50">
-            <div class="menu-inner flex flex-col items-center justify-center min-h-full px-6 py-10 safe-bottom">
-                <div class="flex flex-col items-center gap-0 w-full max-w-sm">
-                    <a href="{% url 'opportunities:list' %}" class="mobile-nav-link w-full text-center text-white text-xl font-semibold uppercase tracking-widest-plus py-5 border-b border-white/10 hover:text-harvest-300 transition-colors duration-200">
-                        Browse Markets
+        <!-- Mobile menu overlay — Enhanced for 2026 -->
+        <div id="mobile-menu" class="mobile-menu-overlay fixed inset-0 z-50 lg:hidden" aria-hidden="true">
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="mobile-backdrop"></div>
+            <div class="menu-inner relative min-h-screen w-full max-w-sm ml-auto bg-prairie-800 shadow-2xl">
+                <div class="flex items-center justify-between p-6 border-b border-white/10">
+                    <a href="{% url 'pages:home' %}" class="flex items-center gap-3 text-white font-bold text-xl">
+                        <img src="{% static 'img/MM-logo.svg' %}" alt="Market Mapper" class="w-8 h-8">
+                        Market Mapper
                     </a>
-                    <a href="{% url 'blog:list' %}" class="mobile-nav-link w-full text-center text-white text-xl font-semibold uppercase tracking-widest-plus py-5 border-b border-white/10 hover:text-harvest-300 transition-colors duration-200">
-                        Guides
-                    </a>
-                    <a href="{% url 'stories:list' %}" class="mobile-nav-link w-full text-center text-white text-xl font-semibold uppercase tracking-widest-plus py-5 border-b border-white/10 hover:text-harvest-300 transition-colors duration-200">
-                        Vendor Stories
-                    </a>
-                    <a href="{% url 'pages:about' %}" class="mobile-nav-link w-full text-center text-white text-xl font-semibold uppercase tracking-widest-plus py-5 border-b border-white/10 hover:text-harvest-300 transition-colors duration-200">
-                        About
-                    </a>
-                    <a href="{% url 'pages:contact' %}" class="mt-8 w-full text-center bg-harvest text-white text-xl font-bold uppercase tracking-widest py-4 rounded-sm hover:bg-harvest-600 transition-colors duration-200 shadow-lg">
-                        Submit a Market
-                    </a>
+                    <button class="text-white hover:text-harvest-300 w-10 h-10 flex items-center justify-center touch-target" aria-label="Close menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <a href="{% url 'opportunities:list' %}" class="block text-white hover:text-harvest-300 font-medium text-lg py-3 px-2 rounded-lg hover:bg-white/10 transition-colors touch-target">Browse Markets</a>
+                    <a href="{% url 'blog:list' %}" class="block text-white hover:text-harvest-300 font-medium text-lg py-3 px-2 rounded-lg hover:bg-white/10 transition-colors touch-target">Guides</a>
+                    <a href="{% url 'stories:list' %}" class="block text-white hover:text-harvest-300 font-medium text-lg py-3 px-2 rounded-lg hover:bg-white/10 transition-colors touch-target">Vendor Stories</a>
+                    <a href="{% url 'pages:about' %}" class="block text-white hover:text-harvest-300 font-medium text-lg py-3 px-2 rounded-lg hover:bg-white/10 transition-colors touch-target">About</a>
+                    <hr class="border-white/20 my-6">
+                    <a href="{% url 'pages:contact' %}" class="block bg-harvest text-white font-semibold text-lg py-4 px-6 rounded-lg hover:bg-harvest-600 transition-colors text-center touch-target">Submit a Market</a>
                 </div>
             </div>
         </div>
@@ -264,14 +476,14 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer — dark premium -->
+    <!-- Footer — Enhanced with bigger logo and improved mobile layout -->
     <footer class="bg-prairie-800 mt-auto">
-        <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-16 sm:py-20">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 text-center md:text-left">
-                <!-- Brand -->
+        <div class="max-w-7xl mx-auto mobile-content">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center md:text-left">
+                <!-- Brand - Much bigger logo as requested -->
                 <div>
-                    <a href="{% url 'pages:home' %}" class="inline-flex items-center gap-4 text-white font-bold text-2xl lg:text-3xl">
-                        <img src="{% static 'img/MM-logo.svg' %}" alt="Market Mapper" class="w-20 h-20 lg:w-24 lg:h-24">
+                    <a href="{% url 'pages:home' %}" class="inline-flex items-center gap-4 text-white font-bold text-2xl lg:text-3xl mb-6 hover:text-harvest-300 transition-colors">
+                        <img src="{% static 'img/MM-logo.svg' %}" alt="Market Mapper" class="w-16 h-16 lg:w-20 lg:h-20">
                         Market Mapper
                     </a>
                     <p class="text-gray-300 text-lg sm:text-xl mt-6 leading-relaxed">
@@ -309,7 +521,7 @@
             <!-- Bottom bar with Back to top -->
             <div class="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p class="text-gray-400 text-sm">&copy; 2026 Market Mapper. All rights reserved.</p>
-                <a href="#top" class="back-to-top text-gray-400 hover:text-harvest-300 text-sm font-medium uppercase tracking-widest flex items-center gap-2">
+                <a href="#top" class="back-to-top text-gray-400 hover:text-harvest-300 text-sm font-medium uppercase tracking-widest flex items-center gap-2 touch-target">
                     <span>Back to top</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
@@ -319,57 +531,99 @@
         </div>
     </footer>
 
-    <!-- Mobile menu script -->
+    <!-- Mobile menu JavaScript with enhanced interactions -->
     <script>
     (function() {
+        'use strict';
+        
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
-        const iconOpen = document.getElementById('menu-icon-open');
-        const iconClose = document.getElementById('menu-icon-close');
-        const body = document.body;
-
-        btn.addEventListener('click', function() {
+        const backdrop = document.getElementById('mobile-backdrop');
+        const openIcon = document.getElementById('menu-icon-open');
+        const closeIcon = document.getElementById('menu-icon-close');
+        
+        if (!btn || !menu) return;
+        
+        function toggleMenu() {
             const isOpen = menu.classList.contains('open');
+            
             if (isOpen) {
                 menu.classList.remove('open');
-                iconOpen.classList.remove('hidden');
-                iconClose.classList.add('hidden');
                 btn.setAttribute('aria-expanded', 'false');
-                body.style.overflow = '';
+                openIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+                document.body.style.overflow = '';
             } else {
                 menu.classList.add('open');
-                iconOpen.classList.add('hidden');
-                iconClose.classList.remove('hidden');
                 btn.setAttribute('aria-expanded', 'true');
-                body.style.overflow = 'hidden';
+                openIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent background scroll
             }
-        });
-
-        // Close mobile menu on link click
-        menu.querySelectorAll('a').forEach(function(link) {
-            link.addEventListener('click', function() {
-                menu.classList.remove('open');
-                iconOpen.classList.remove('hidden');
-                iconClose.classList.add('hidden');
-                btn.setAttribute('aria-expanded', 'false');
-                body.style.overflow = '';
-            });
-        });
-
-        // Close mobile menu on Escape key
+        }
+        
+        btn.addEventListener('click', toggleMenu);
+        
+        // Close on backdrop click
+        if (backdrop) {
+            backdrop.addEventListener('click', toggleMenu);
+        }
+        
+        // Close on escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && menu.classList.contains('open')) {
-                menu.classList.remove('open');
-                iconOpen.classList.remove('hidden');
-                iconClose.classList.add('hidden');
-                btn.setAttribute('aria-expanded', 'false');
-                body.style.overflow = '';
-                btn.focus();
+                toggleMenu();
             }
+        });
+        
+        // Close menu when clicking internal links
+        menu.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                setTimeout(toggleMenu, 150);
+            }
+        });
+
+        // 2026 Performance: Passive listeners for smooth scrolling
+        let ticking = false;
+        function updateHeader() {
+            const header = document.querySelector('header');
+            const scrolled = window.pageYOffset > 0;
+            
+            if (header) {
+                header.setAttribute('data-scrolled', scrolled.toString());
+            }
+            ticking = false;
+        }
+        
+        function requestUpdateHeader() {
+            if (!ticking) {
+                requestAnimationFrame(updateHeader);
+                ticking = true;
+            }
+        }
+        
+        window.addEventListener('scroll', requestUpdateHeader, { passive: true });
+        
+        // Enhanced smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    const headerHeight = document.querySelector('header')?.offsetHeight || 0;
+                    const targetPosition = target.offsetTop - headerHeight - 20;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
         });
     })();
     </script>
-
-    {% block extra_js %}{% endblock %}
 </body>
 </html>
