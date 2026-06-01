@@ -6,508 +6,397 @@
 {% block extrahead %}
     {{ super }}
     <style>
-        /* Enhanced changelist styling for SaaS theme */
-        .changelist-container {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 2rem;
-        }
-        
-        .changelist-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 2rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            margin-bottom: 2rem;
+        /* Clean admin list styling */
+        #changelist {
+            background: #f8fafc;
+            padding: 1.5rem;
         }
         
         .changelist-header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f0f0f0;
         }
         
-        .changelist-title {
-            font-size: 2rem;
+        .changelist-header h1 {
+            font-size: 1.75rem;
             font-weight: 700;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #1f2937;
             margin: 0;
         }
         
-        .add-button {
-            background: linear-gradient(45deg, #11998e, #38ef7d);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 2rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 16px rgba(17, 153, 142, 0.3);
+        .addlink {
+            background: linear-gradient(45deg, #10b981, #059669) !important;
+            color: white !important;
+            padding: 0.75rem 1.5rem !important;
+            border-radius: 0.75rem !important;
+            font-weight: 600 !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+            transition: all 0.2s ease !important;
+            font-size: 0.875rem !important;
         }
         
-        .add-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(17, 153, 142, 0.4);
-            color: white;
-            text-decoration: none;
+        .addlink:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+            color: white !important;
+            text-decoration: none !important;
         }
         
-        .search-filters-container {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            align-items: end;
-        }
-        
-        .search-box {
-            position: relative;
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 2rem;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+        #toolbar {
             background: white;
-        }
-        
-        .search-box input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .search-box::before {
-            content: "🔍";
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.2rem;
-        }
-        
-        .filter-button {
-            background: linear-gradient(45deg, #764ba2, #667eea);
-            color: white;
             padding: 1rem 1.5rem;
-            border: none;
-            border-radius: 2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        #toolbar form {
+            display: flex;
+            gap: 1rem;
             align-items: center;
-            gap: 0.5rem;
+            margin: 0;
         }
         
-        .filter-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(118, 75, 162, 0.3);
+        #toolbar input[type="text"] {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
         }
         
-        .results-table {
+        #toolbar input[type="text"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+        
+        .results {
             background: white;
-            border-radius: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            border: 1px solid #f0f0f0;
         }
         
-        .results-table table {
+        #result_list {
             width: 100%;
             border-collapse: collapse;
             margin: 0;
         }
         
-        .results-table thead {
-            background: linear-gradient(45deg, #f8f9ff, #f0f2ff);
+        #result_list thead {
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
         }
         
-        .results-table th {
-            padding: 1.5rem 1rem;
+        #result_list th {
+            padding: 1rem;
             text-align: left;
-            font-weight: 700;
-            color: #4a5568;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-bottom: 2px solid #e2e8f0;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+            border-bottom: 1px solid #e5e7eb;
         }
         
-        .results-table th:first-child {
-            border-radius: 1.5rem 0 0 0;
+        #result_list th a {
+            color: #374151;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
         
-        .results-table th:last-child {
-            border-radius: 0 1.5rem 0 0;
+        #result_list th a:hover {
+            color: #1f2937;
         }
         
-        .results-table td {
-            padding: 1.25rem 1rem;
-            border-bottom: 1px solid #f0f0f0;
+        #result_list td {
+            padding: 1rem;
+            border-bottom: 1px solid #f3f4f6;
             vertical-align: middle;
         }
         
-        .results-table tbody tr {
-            transition: all 0.2s ease;
+        #result_list tbody tr:hover {
+            background: #f9fafb;
         }
         
-        .results-table tbody tr:hover {
-            background: linear-gradient(90deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-            transform: scale(1.002);
-        }
-        
-        .results-table tbody tr:last-child td {
+        #result_list tbody tr:last-child td {
             border-bottom: none;
         }
         
-        .results-table tbody tr:last-child td:first-child {
-            border-radius: 0 0 0 1.5rem;
+        #result_list .action-checkbox-column {
+            width: 40px;
+            padding: 1rem 0.5rem;
         }
         
-        .results-table tbody tr:last-child td:last-child {
-            border-radius: 0 0 1.5rem 0;
-        }
-        
-        .record-link {
-            color: #667eea;
+        /* Links in the first column */
+        #result_list tbody td:first-child a {
+            color: #3b82f6;
             text-decoration: none;
-            font-weight: 600;
-            transition: color 0.2s ease;
+            font-weight: 500;
         }
         
-        .record-link:hover {
-            color: #764ba2;
+        #result_list tbody td:first-child a:hover {
+            color: #1d4ed8;
             text-decoration: underline;
         }
         
-        .status-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 1.5rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        .status-published {
-            background: linear-gradient(45deg, #38ef7d, #11998e);
-            color: white;
-        }
-        
-        .status-draft {
-            background: linear-gradient(45deg, #ffd89b, #19547b);
-            color: white;
-        }
-        
-        .category-tag {
-            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            color: #667eea;
-            padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        
-        .date-text {
-            color: #64748b;
-            font-size: 0.9rem;
-        }
-        
-        .pagination {
+        .paginator {
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: center;
-            align-items: center;
             gap: 0.5rem;
-            margin-top: 2rem;
-            padding: 1rem;
+            background: #f9fafb;
+            border-bottom-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
         }
         
-        .pagination a, .pagination span {
-            padding: 0.75rem 1rem;
-            border-radius: 1rem;
+        .paginator a, .paginator span {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
         }
         
-        .pagination a {
+        .paginator a {
+            color: #374151;
+            border: 1px solid #d1d5db;
             background: white;
-            color: #667eea;
-            border: 2px solid #e0e0e0;
         }
         
-        .pagination a:hover {
-            background: #667eea;
+        .paginator a:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
+        }
+        
+        .paginator .this-page {
+            background: #3b82f6;
             color: white;
-            border-color: #667eea;
-            transform: translateY(-1px);
-        }
-        
-        .pagination .this-page {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border: 2px solid transparent;
-        }
-        
-        .results-count {
-            text-align: center;
-            margin: 1rem 0;
-            color: #64748b;
-            font-weight: 500;
-        }
-        
-        .breadcrumbs {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            border-radius: 2rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .breadcrumbs a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-        
-        .breadcrumbs a:hover {
-            color: #764ba2;
+            border: 1px solid #3b82f6;
         }
         
         .actions {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1rem;
-            border-radius: 1.5rem;
-            margin-bottom: 1rem;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            padding: 1rem 1.5rem;
             display: flex;
             align-items: center;
             gap: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
         }
         
         .actions select {
-            padding: 0.75rem 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 1rem;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
             background: white;
-            font-weight: 500;
         }
         
         .actions button {
-            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            background: #f59e0b;
             color: white;
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             border: none;
-            border-radius: 1rem;
-            font-weight: 600;
+            border-radius: 0.375rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 0.875rem;
         }
         
         .actions button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 16px rgba(255, 107, 107, 0.3);
+            background: #d97706;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            #changelist {
+                padding: 1rem;
+            }
+            
+            .changelist-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .results {
+                overflow-x: auto;
+            }
+            
+            #result_list th,
+            #result_list td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* Empty state */
+        .empty-results {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #6b7280;
+        }
+        
+        .empty-results h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+            color: #374151;
+        }
+        
+        /* Status styling */
+        .status-published {
+            color: #065f46;
+            background: #d1fae5;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-draft {
+            color: #92400e;
+            background: #fef3c7;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
         }
     </style>
 {% endblock %}
 
 {% block content %}
-<div class="changelist-container">
-    {% if cl.breadcrumbs_title %}
-    <div class="breadcrumbs">
-        <a href="{% url 'admin:index' %}">🏠 Home</a>
-        <span>›</span>
-        <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.breadcrumbs_title }}</a>
-        <span>›</span>
-        <span>{{ cl.opts.verbose_name_plural|capfirst }}</span>
+<div id="changelist" class="{% if cl.formset %}filtered{% endif %}">
+    <div class="changelist-header">
+        <h1>{{ cl.opts.verbose_name_plural|capfirst }}</h1>
+        {% url cl.opts|admin_urlname:'add' as add_url %}{% if add_url %}
+        <a href="{{ add_url }}" class="addlink">
+            ➕ Add {{ cl.opts.verbose_name }}
+        </a>
+        {% endif %}
     </div>
-    {% endif %}
-    
-    <div class="changelist-card">
-        <div class="changelist-header">
-            <h1 class="changelist-title">
-                {{ cl.opts.verbose_name_plural|capfirst }}
-            </h1>
-            {% if has_add_permission %}
-            <a href="{% url cl.opts|admin_urlname:'add' %}" class="add-button">
-                ➕ Add {{ cl.opts.verbose_name }}
-            </a>
-            {% endif %}
-        </div>
-        
-        {% if cl.has_filters or search_var %}
-        <div class="search-filters-container">
-            {% if search_var %}
-            <div class="search-box">
-                <form method="get">
-                    <input type="search" 
-                           name="{{ search_var }}" 
-                           value="{{ cl.query }}"
-                           placeholder="Search {{ cl.opts.verbose_name_plural|lower }}..." 
-                           aria-label="Search">
-                    {% for key, value in cl.params.items %}
-                        {% if key != search_var %}
-                            <input type="hidden" name="{{ key }}" value="{{ value }}">
-                        {% endif %}
-                    {% endfor %}
-                </form>
-            </div>
-            {% endif %}
-            
+
+    {% block search %}{% search_form cl %}{% endblock %}
+    {% block date_hierarchy %}{% date_hierarchy cl %}{% endblock %}
+
+    <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist-filter">
+        {% block filters %}
             {% if cl.has_filters %}
-            <button class="filter-button" onclick="toggleFilters()">
-                🔽 Filters
-            </button>
+                <div id="changelist-filter">
+                    <h2>{% trans 'Filter' %}</h2>
+                    {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+                </div>
             {% endif %}
-        </div>
-        {% endif %}
-        
-        {% if action_form and actions_on_top and cl.show_admin_actions %}
-        <form method="post" class="actions">
-            {% csrf_token %}
-            <label for="action-select">Action:</label>
-            <select name="action" id="action-select">
-                <option value="">---------</option>
-                {% for choice in action_form.action.field.choices %}
-                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" name="index" value="{{ action_index }}">Go</button>
-        </form>
-        {% endif %}
-        
-        {% if cl.result_count %}
-        <div class="results-count">
-            {{ cl.result_count }} {{ cl.opts.verbose_name_plural|lower }}
-        </div>
-        
-        <div class="results-table">
-            <table>
-                <thead>
-                    <tr>
-                        {% if action_form and cl.show_admin_actions %}
-                            <th><input type="checkbox" id="action-toggle"></th>
-                        {% endif %}
-                        {% for header in result_headers %}
-                            <th>
-                                {% if header.sortable %}
-                                    <a href="{{ header.url_primary }}">{{ header.text|capfirst }}</a>
-                                {% else %}
-                                    {{ header.text|capfirst }}
-                                {% endif %}
-                            </th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for result in results %}
-                        <tr>
-                            {% if action_form and cl.show_admin_actions %}
-                                <td>
-                                    <input type="checkbox" name="_selected_action" value="{{ result.pk }}">
-                                </td>
-                            {% endif %}
-                            {% for item in result %}
-                                <td>
-                                    {% if forloop.first and not action_form %}
-                                        <a href="{% url cl.opts|admin_urlname:'change' result.pk|admin_urlquote %}" class="record-link">
-                                            {{ item }}
-                                        </a>
-                                    {% else %}
-                                        {% if 'status' in item|lower or 'published' in item|lower %}
-                                            <span class="status-badge status-{{ item|lower|slugify }}">
-                                                {{ item }}
-                                            </span>
-                                        {% elif 'category' in forloop.parentloop.counter0|add:"-1"|slice:":1" %}
-                                            <span class="category-tag">{{ item }}</span>
-                                        {% elif 'date' in item|lower or item|date:'Y-m-d' == item %}
-                                            <span class="date-text">{{ item }}</span>
-                                        {% else %}
-                                            {{ item }}
-                                        {% endif %}
-                                    {% endif %}
-                                </td>
+        {% endblock %}
+
+        <form id="changelist-search" method="get">
+            {% block result_list %}
+                {% if action_form and actions_on_top and cl.show_admin_actions %}
+                    <div class="actions">
+                        {% csrf_token %}
+                        <label>Action: <select name="action" required>
+                            <option value="" selected>---------</option>
+                            {% for choice in action_form.action.field.choices %}
+                                {% if choice.0 %}<option value="{{ choice.0 }}">{{ choice.1|capfirst }}</option>{% endif %}
                             {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-        {% if cl.result_count > cl.list_per_page %}
-        <div class="pagination">
-            {% if cl.result_count > cl.list_per_page %}
-                {% if cl.show_all %}
-                    <a href="{% url cl.opts|admin_urlname:'changelist' %}{% if cl.preserved_filters %}?{{ cl.preserved_filters }}{% endif %}">Show paginated</a>
-                {% else %}
-                    {% if cl.can_show_all %}
-                        <a href="?{% if cl.preserved_filters %}{{ cl.preserved_filters }}&amp;{% endif %}all=">Show all {{ cl.result_count }}</a>
-                    {% endif %}
-                {% endif %}
-            {% endif %}
-            
-            {% if cl.formset and cl.result_count %}
-                {% if cl.formset.paginator.num_pages > 1 %}
-                    {% for i in cl.formset.paginator.page_range %}
-                        {% if cl.formset.page.number == i %}
-                            <span class="this-page">{{ i }}</span>
-                        {% else %}
-                            <a href="?{% if cl.preserved_filters %}{{ cl.preserved_filters }}&amp;{% endif %}p={{ i }}">{{ i }}</a>
+                        </select></label>
+                        <button type="submit" class="button" title="{% trans "Run the selected action" %}" name="index" value="{{ action_index }}">{% trans "Go" %}</button>
+                        {% if actions_selection_counter %}
+                            <span class="action-counter" data-actions-icnt="{{ cl.result_count }}">0 of {{ cl.result_count }} selected</span>
                         {% endif %}
-                    {% endfor %}
+                    </div>
                 {% endif %}
+
+                <div class="results">
+                    <table id="result_list">
+                        <thead>
+                            <tr>
+                            {% if action_form and cl.show_admin_actions %}<th scope="col" class="action-checkbox-column">
+                                <div class="text">
+                                    <span><input type="checkbox" id="action-toggle"></span>
+                                </div>
+                            </th>{% endif %}
+                            {% for header in result_headers %}
+                                <scope="col"{{ header.class_attrib }}>
+                                    {%- if header.sortable -%}
+                                        {%- if header.sort_priority > 0 -%}
+                                            <div class="sortoptions">
+                                                <a class="sortremove" href="{{ header.url_remove }}" title="{% trans "Remove from sorting" %}"></a>
+                                                {% if num_sorted_fields > 1 %}<span class="sortpriority" title="{% trans "Sorting priority" %}">{{ header.sort_priority }}</span>{% endif %}
+                                                <a href="{{ header.url_toggle }}" class="toggle {% if header.ascending %}ascending{% else %}descending{% endif %}" title="{% trans "Toggle sorting" %}"></a>
+                                            </div>
+                                        {%- endif -%}
+                                        <div class="text"><a href="{{ header.url_primary }}">{{ header.text|capfirst }}</a></div>
+                                    {%- else -%}
+                                        <div class="text"><span>{{ header.text|capfirst }}</span></div>
+                                    {%- endif -%}
+                                </th>
+                            {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for result in results %}
+                            {% if result.form and result.form.non_field_errors %}
+                                <tr><td colspan="{{ result|length }}">{{ result.form.non_field_errors }}</td></tr>
+                            {% endif %}
+                            <tr class="{% cycle 'row1' 'row2' %}">
+                                {% if action_form and cl.show_admin_actions %}
+                                    <td class="action-checkbox">
+                                        {% if result.form %}
+                                            {{ result.form.DELETE }}
+                                            {{ result.form.DELETE.errors }}
+                                        {% else %}
+                                            <input type="checkbox" name="_selected_action" value="{{ result.pk|unlocalize }}" class="action-select">
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                                {% for item in result %}
+                                    <td{{ item.class_attrib }}>
+                                        {% if item.form %}{{ item.form }}{% else %}{{ item }}{% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endblock %}
+
+            {% if cl.result_count %}
+                <p class="paginator">
+                    {% if cl.result_count != cl.full_result_count %}
+                        <span class="filtered">
+                            {% blocktrans count counter=cl.result_count %}{{ counter }} result{% plural %}{{ counter }} results{% endblocktrans %}
+                            (<a href="?{% if cl.preserved_filters %}{{ cl.preserved_filters }}&amp;{% endif %}all=">{% blocktrans with full_result_count=cl.full_result_count %}{{ full_result_count }} total{% endblocktrans %}</a>)
+                        </span>
+                    {% else %}
+                        <span class="filtered">
+                            {% blocktrans count counter=cl.result_count %}{{ counter }} result{% plural %}{{ counter }} results{% endblocktrans %}
+                        </span>
+                    {% endif %}
+
+                    {% if cl.result_count > cl.list_per_page %}
+                        {% if cl.show_all %}<a href="{% url cl.opts|admin_urlname:'changelist' %}{% if cl.preserved_filters %}?{{ cl.preserved_filters }}{% endif %}" class="showall">{% trans 'Show all' %}</a>{% endif %}
+                        {% if cl.can_show_all and not cl.show_all %}<a href="?{% if cl.preserved_filters %}{{ cl.preserved_filters }}&amp;{% endif %}all=" class="showall">{% trans 'Show all' %}</a>{% endif %}
+                    {% endif %}
+
+                    {% pagination cl %}
+                </p>
             {% endif %}
-        </div>
-        {% endif %}
-        
-        {% else %}
-        <div style="text-align: center; padding: 3rem; color: #64748b;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
-            <h3>No {{ cl.opts.verbose_name_plural|lower }} yet</h3>
-            <p>Get started by adding your first {{ cl.opts.verbose_name|lower }}.</p>
-            {% if has_add_permission %}
-            <a href="{% url cl.opts|admin_urlname:'add' %}" class="add-button" style="margin-top: 1rem; display: inline-flex;">
-                ➕ Add {{ cl.opts.verbose_name }}
-            </a>
-            {% endif %}
-        </div>
-        {% endif %}
+        </form>
     </div>
 </div>
-
-<script>
-function toggleFilters() {
-    // Add filter toggle functionality if needed
-    console.log('Toggle filters');
-}
-
-// Enhanced checkbox functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const toggleAll = document.getElementById('action-toggle');
-    const checkboxes = document.querySelectorAll('input[name="_selected_action"]');
-    
-    if (toggleAll) {
-        toggleAll.addEventListener('change', function() {
-            checkboxes.forEach(cb => cb.checked = this.checked);
-        });
-    }
-});
-</script>
 {% endblock %}
