@@ -14,7 +14,7 @@ from datetime import timedelta
 from django.contrib import admin
 from django.contrib.admin import widgets  
 from django.db.models import Count
-from django.forms import Select
+from django.forms import RadioSelect
 from django.utils import timezone
 from django.utils.html import format_html
 
@@ -38,8 +38,9 @@ class EditableMixin:
         return self.list_display_links
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
-        """Let Django handle choice fields naturally."""
-        # Remove custom widget override - let Django use default
+        """Use radio buttons for verification status - more reliable with Unfold."""
+        if db_field.name == 'verification_status':
+            kwargs['widget'] = RadioSelect()
         return super().formfield_for_choice_field(db_field, request, **kwargs)
 
     # Remove get_form override - let Django handle it
