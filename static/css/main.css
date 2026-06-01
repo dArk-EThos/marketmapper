@@ -37,6 +37,6 @@ body {
 /* Ensure gradient overlay works on all devices */
 @supports not (backdrop-filter: blur(1px)) {
     .hero-bg .bg-gradient-to-br {
-        background: linear-gradient(135deg, rgba(0, 51, 74, 0.88) 0%, rgba(0, 37, 55, 0.92) 100%);
+        background: linear-gradient(135deg, rgba(0, 51, 74, 0.40) 0%, rgba(0, 37, 55, 0.50) 100%);
     }
 }
