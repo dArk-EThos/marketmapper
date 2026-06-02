@@ -14,7 +14,7 @@ from datetime import timedelta
 from django.contrib import admin
 from django.contrib.admin import widgets  
 from django.db.models import Count
-from django.forms import RadioSelect
+from django.forms import RadioSelect, CheckboxSelectMultiple, ModelForm
 from django.utils import timezone
 from django.utils.html import format_html
 
@@ -22,6 +22,26 @@ from unfold.admin import ModelAdmin
 from unfold.decorators import action
 
 from .models import Opportunity, Region
+
+
+# Custom form with better widgets for JSON fields
+class OpportunityAdminForm(ModelForm):
+    class Meta:
+        model = Opportunity
+        fields = '__all__'
+        widgets = {
+            'vendor_categories': CheckboxSelectMultiple(choices=Opportunity.VENDOR_CATEGORIES),
+            'badges': CheckboxSelectMultiple(choices=Opportunity.BADGE_CHOICES),
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Add help text for tags field
+        self.fields['tags'].help_text = (
+            'Add tags separated by commas, e.g. "outdoor, seasonal, popular". '
+            'These help with search and organization.'
+        )
 
 
 # Custom mixin to ensure edit links work properly with Unfold
@@ -164,6 +184,8 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
     existing functionality: colored badges, bulk actions, fieldsets,
     and dashboard stats injection.
     """
+    
+    form = OpportunityAdminForm
     
     # Ensure all permissions are enabled
     def has_add_permission(self, request):
