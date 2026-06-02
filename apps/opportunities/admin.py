@@ -16,6 +16,7 @@ from django.contrib.admin import widgets
 from django.db.models import Count
 from django.forms import RadioSelect, CheckboxSelectMultiple, ModelForm
 from django import forms
+from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.utils.html import format_html
 
@@ -23,6 +24,31 @@ from unfold.admin import ModelAdmin
 from unfold.decorators import action
 
 from .models import Opportunity, Region
+
+
+# Custom checkbox widget that properly shows selected values
+class FixedCheckboxSelectMultiple(CheckboxSelectMultiple):
+    """CheckboxSelectMultiple that properly renders checked state for JSON fields"""
+    
+    def format_value(self, value):
+        """Ensure value is properly formatted for widget rendering"""
+        if value is None:
+            return []
+        if isinstance(value, str):
+            try:
+                # Handle string representations of lists
+                import json
+                return json.loads(value)
+            except:
+                return []
+        if isinstance(value, list):
+            return value
+        return []
+    
+    def value_from_datadict(self, data, files, name):
+        """Extract value from form data"""
+        result = super().value_from_datadict(data, files, name)
+        return result if result is not None else []
 
 
 # Custom form with better widgets for JSON fields
@@ -38,8 +64,8 @@ class OpportunityAdminForm(ModelForm):
         model = Opportunity
         fields = '__all__'
         widgets = {
-            'vendor_categories': CheckboxSelectMultiple(choices=Opportunity.VENDOR_CATEGORIES),
-            'badges': CheckboxSelectMultiple(choices=Opportunity.BADGE_CHOICES),
+            'vendor_categories': FixedCheckboxSelectMultiple(choices=Opportunity.VENDOR_CATEGORIES),
+            'badges': FixedCheckboxSelectMultiple(choices=Opportunity.BADGE_CHOICES),
         }
         
     def __init__(self, *args, **kwargs):
@@ -49,6 +75,14 @@ class OpportunityAdminForm(ModelForm):
         if self.instance and self.instance.pk and self.instance.tags:
             if isinstance(self.instance.tags, list):
                 self.initial['tags'] = ', '.join(self.instance.tags)
+        
+        # Ensure checkbox widgets show selected values correctly
+        if self.instance and self.instance.pk:
+            # Explicitly set initial values for checkbox widgets
+            if self.instance.vendor_categories:
+                self.initial['vendor_categories'] = self.instance.vendor_categories
+            if self.instance.badges:
+                self.initial['badges'] = self.instance.badges
     
     def clean_tags(self):
         """Convert comma-separated tags to list"""
