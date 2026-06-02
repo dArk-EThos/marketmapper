@@ -37,11 +37,25 @@ class OpportunityAdminForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        # Add help text for tags field
+        # Add help text for tags field  
         self.fields['tags'].help_text = (
             'Add tags separated by commas, e.g. "outdoor, seasonal, popular". '
             'These help with search and organization.'
         )
+        
+        # Convert tags list to comma-separated string for display
+        if self.instance and self.instance.pk and self.instance.tags:
+            if isinstance(self.instance.tags, list):
+                self.initial['tags'] = ', '.join(self.instance.tags)
+    
+    def clean_tags(self):
+        """Convert comma-separated tags to list"""
+        tags_input = self.cleaned_data.get('tags', '')
+        if isinstance(tags_input, str):
+            # Split by comma and clean up
+            tags = [tag.strip() for tag in tags_input.split(',') if tag.strip()]
+            return tags
+        return tags_input or []
 
 
 # Custom mixin to ensure edit links work properly with Unfold
