@@ -102,17 +102,28 @@ class Opportunity(models.Model):
         related_name="opportunities",
     )
     city = models.CharField(max_length=100)
+    venue = models.CharField(max_length=200, blank=True, help_text="Specific venue/location where the event takes place")
     opportunity_type = models.CharField(max_length=50, choices=OPPORTUNITY_TYPES)
     vendor_categories = models.JSONField(default=list, blank=True)
 
     # === Date fields ===
     event_date = models.DateField(null=True, blank=True)
     event_date_end = models.DateField(null=True, blank=True)
-    event_date_text = models.CharField(
-        max_length=255,
-        blank=True,
-        help_text="Human-readable date description for recurring/complex schedules",
-    )
+    event_date_text = models.CharField(max_length=200, blank=True)
+    
+    # Recurring event patterns
+    RECURRING_PATTERNS = [
+        ("one_time", "One-time Event"),
+        ("weekly", "Weekly"),
+        ("bi_weekly", "Bi-weekly"), 
+        ("monthly", "Monthly"),
+        ("seasonal", "Seasonal"),
+        ("multi_day", "Multi-day Consecutive"),
+        ("custom", "Custom Pattern"),
+    ]
+    recurring_pattern = models.CharField(max_length=20, choices=RECURRING_PATTERNS, default="one_time", blank=True)
+    recurring_description = models.TextField(blank=True, help_text="Describe the recurring schedule (e.g., 'Every Saturday 9am-3pm', 'First weekend of each month')")
+
     application_deadline = models.DateField(null=True, blank=True)
     application_deadline_text = models.CharField(
         max_length=255,
@@ -122,6 +133,11 @@ class Opportunity(models.Model):
 
     # === Source fields ===
     application_url = models.URLField(max_length=500, blank=True)
+    guidelines_url = models.URLField(
+        max_length=500, 
+        blank=True, 
+        help_text="Link to event guidelines, rules, or vendor handbook (often a PDF)"
+    )
     source_url = models.URLField(max_length=500)
     source_type = models.CharField(max_length=30, choices=SOURCE_TYPES)
     date_found = models.DateField(auto_now_add=True)
@@ -147,7 +163,7 @@ class Opportunity(models.Model):
     )
     power_available = models.BooleanField(null=True, blank=True)
     insurance_required = models.BooleanField(null=True, blank=True)
-    food_vendor_notes = models.TextField(blank=True)
+    notes = models.TextField(blank=True, help_text="General notes about the opportunity, vendor requirements, etc.")
 
     # === Contact ===
     contact_name = models.CharField(max_length=200, blank=True)
@@ -156,7 +172,6 @@ class Opportunity(models.Model):
     organizer_name = models.CharField(max_length=200, blank=True)
 
     # === Meta / admin ===
-    notes = models.TextField(blank=True)
     tags = models.JSONField(default=list, blank=True)
     duplicate_of = models.ForeignKey(
         "self",
@@ -166,14 +181,6 @@ class Opportunity(models.Model):
         related_name="duplicates",
     )
     meta_description = models.CharField(max_length=160, blank=True)
-
-    # === Location coordinates (for map view) ===
-    latitude = models.DecimalField(
-        max_digits=9, decimal_places=6, null=True, blank=True
-    )
-    longitude = models.DecimalField(
-        max_digits=9, decimal_places=6, null=True, blank=True
-    )
 
     # === Badges ===
     BADGE_CHOICES = [

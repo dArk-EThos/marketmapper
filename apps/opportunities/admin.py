@@ -257,9 +257,8 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
                     "province",
                     "region",
                     "city",
+                    "venue",
                     "indoor_outdoor",
-                    "latitude",
-                    "longitude",
                 ),
                 "classes": ["tab"],
             },
@@ -269,8 +268,10 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
             {
                 "fields": (
                     "event_date",
-                    "event_date_end",
+                    "event_date_end", 
                     "event_date_text",
+                    "recurring_pattern",
+                    "recurring_description",
                     "application_deadline",
                     "application_deadline_text",
                 ),
@@ -282,13 +283,14 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
             {
                 "fields": (
                     "application_url",
+                    "guidelines_url",
                     "source_url", 
                     "source_type",
                     "social_url",
                     "link_status_display",
                 ),
                 "classes": ["tab"],
-                "description": "URLs for vendor applications and event information. Use 'Test Links' action to verify.",
+                "description": "URLs for vendor applications, guidelines, and event information. Use 'Test Links' action to verify.",
             },
         ),
         (
@@ -299,7 +301,7 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
                     "booth_size",
                     "power_available",
                     "insurance_required",
-                    "food_vendor_notes",
+                    "notes",
                 ),
                 "classes": ["tab"],
             },
@@ -318,7 +320,6 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
             "Tracking & SEO",
             {
                 "fields": (
-                    "notes",
                     "tags",
                     "badges",
                     "duplicate_of",
@@ -393,6 +394,8 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
             urls_to_test = []
             if opp.application_url:
                 urls_to_test.append(("Application", opp.application_url))
+            if opp.guidelines_url:
+                urls_to_test.append(("Guidelines", opp.guidelines_url))
             if opp.source_url:
                 urls_to_test.append(("Source", opp.source_url))
                 

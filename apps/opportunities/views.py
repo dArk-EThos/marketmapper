@@ -63,17 +63,9 @@ class OpportunityListView(ListView):
         context["regions"] = Region.objects.all()
 
         # Map data for Leaflet map view
+        # Note: Map functionality disabled since lat/lng fields were removed
+        # TODO: Re-implement with geocoding if needed
         map_items = []
-        for opp in self.filterset.qs[:100]:  # Limit to 100 for performance
-            if opp.latitude and opp.longitude:
-                map_items.append({
-                    "name": opp.opportunity_name,
-                    "city": opp.city,
-                    "lat": float(opp.latitude),
-                    "lng": float(opp.longitude),
-                    "url": opp.get_absolute_url(),
-                    "type": opp.get_opportunity_type_display(),
-                })
         context["map_data"] = json.dumps(map_items)
 
         return context

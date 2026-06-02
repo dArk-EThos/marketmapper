@@ -22,7 +22,7 @@ CATEGORY_LABELS = {
 def deadline_urgency(deadline):
     """Return urgency level string for a deadline date.
 
-    Returns 'urgent' (<7 days), 'soon' (<14 days), 'normal', or 'past'.
+    Returns 'urgent' (<7 days), 'soon' (<30 days), 'normal', or 'past'.
     """
     if not deadline:
         return "normal"
@@ -31,7 +31,7 @@ def deadline_urgency(deadline):
         return "past"
     if delta < 7:
         return "urgent"
-    if delta < 14:
+    if delta < 30:  # Changed from 14 to 30 days
         return "soon"
     return "normal"
 

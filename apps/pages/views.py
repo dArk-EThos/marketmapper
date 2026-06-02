@@ -20,6 +20,7 @@ class HomePageView(TemplateView):
 
         today = timezone.now().date()
         week_out = today + timedelta(days=7)
+        month_out = today + timedelta(days=30)  # Add 30-day threshold
 
         # Stats
         context["stats"] = {
@@ -35,9 +36,10 @@ class HomePageView(TemplateView):
             ),
         }
 
-        # Closing soon: top 5 by nearest deadline
+        # Closing soon: top 5 with deadlines within 30 days
         context["closing_soon"] = publishable.filter(
-            application_deadline__gte=today
+            application_deadline__gte=today,
+            application_deadline__lte=month_out  # Only show deadlines within 30 days
         ).order_by("application_deadline")[:5]
 
         # Recently added

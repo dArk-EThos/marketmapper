@@ -101,6 +101,10 @@ STORAGES = {
     },
 }
 
+# Newsletter / Beehiiv Integration
+BEEHIIV_API_KEY = env("BEEHIIV_API_KEY", default="")
+BEEHIIV_PUBLICATION_ID = env("BEEHIIV_PUBLICATION_ID", default="")
+
 # Media files
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
