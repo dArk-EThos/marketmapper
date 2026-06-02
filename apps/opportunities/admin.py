@@ -15,6 +15,7 @@ from django.contrib import admin
 from django.contrib.admin import widgets  
 from django.db.models import Count
 from django.forms import RadioSelect, CheckboxSelectMultiple, ModelForm
+from django import forms
 from django.utils import timezone
 from django.utils.html import format_html
 
@@ -26,6 +27,13 @@ from .models import Opportunity, Region
 
 # Custom form with better widgets for JSON fields
 class OpportunityAdminForm(ModelForm):
+    # Override tags field to accept comma-separated input
+    tags = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 2, 'cols': 40}),
+        help_text='Add tags separated by commas, e.g. "outdoor, seasonal, popular"'
+    )
+    
     class Meta:
         model = Opportunity
         fields = '__all__'
@@ -36,12 +44,6 @@ class OpportunityAdminForm(ModelForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        # Add help text for tags field  
-        self.fields['tags'].help_text = (
-            'Add tags separated by commas, e.g. "outdoor, seasonal, popular". '
-            'These help with search and organization.'
-        )
         
         # Convert tags list to comma-separated string for display
         if self.instance and self.instance.pk and self.instance.tags:
@@ -56,6 +58,20 @@ class OpportunityAdminForm(ModelForm):
             tags = [tag.strip() for tag in tags_input.split(',') if tag.strip()]
             return tags
         return tags_input or []
+    
+    def clean_vendor_categories(self):
+        """Ensure vendor_categories is always a list, never None"""
+        categories = self.cleaned_data.get('vendor_categories')
+        if categories is None:
+            return []
+        return categories or []
+    
+    def clean_badges(self):
+        """Ensure badges is always a list, never None"""
+        badges = self.cleaned_data.get('badges')
+        if badges is None:
+            return []
+        return badges or []
 
 
 # Custom mixin to ensure edit links work properly with Unfold
