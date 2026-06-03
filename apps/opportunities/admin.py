@@ -23,7 +23,8 @@ from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 from unfold.decorators import action
 
-from .models import Opportunity, Region
+from .models import Opportunity, Region, Province, OpportunitySubmission
+from .forms import OpportunitySubmissionAdminForm
 
 
 # Custom checkbox widget that properly shows selected values
@@ -634,3 +635,269 @@ class OpportunityAdmin(EditableMixin, ModelAdmin):
             badge["icon"],
             badge["text"]
         )
+
+
+# ──────────────────────────────────────────────
+# ProvinceAdmin
+# ──────────────────────────────────────────────
+
+@admin.register(Province)
+class ProvinceAdmin(ModelAdmin):
+    """Admin for Canadian provinces and territories."""
+    
+    list_display = ("name", "code", "slug", "region_count", "opportunity_count")
+    prepopulated_fields = {"slug": ("name",)}
+    search_fields = ("name", "code")
+    ordering = ("name",)
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(
+            _region_count=Count("regions", distinct=True),
+            _opportunity_count=Count("opportunities", distinct=True)
+        )
+    
+    @admin.display(description="Regions", ordering="_region_count")
+    def region_count(self, obj):
+        return obj._region_count
+    
+    @admin.display(description="Opportunities", ordering="_opportunity_count") 
+    def opportunity_count(self, obj):
+        return obj._opportunity_count
+
+
+# ──────────────────────────────────────────────
+# OpportunitySubmissionAdmin  
+# ──────────────────────────────────────────────
+
+@admin.register(OpportunitySubmission)
+class OpportunitySubmissionAdmin(ModelAdmin):
+    """Admin for user-submitted opportunities requiring approval."""
+    
+    form = OpportunitySubmissionAdminForm
+    
+    list_display = (
+        "opportunity_name",
+        "city", 
+        "province_name",
+        "submitter_name",
+        "status", 
+        "status_colored",
+        "submitted_at",
+        "reviewed_by"
+    )
+    list_filter = (
+        "status",
+        "opportunity_type", 
+        "province_name",
+        "submitted_at",
+    )
+    search_fields = (
+        "opportunity_name",
+        "city",
+        "province_name", 
+        "submitter_name",
+        "submitter_email",
+        "organizer_name"
+    )
+    readonly_fields = ("submitted_at", "converted_opportunity")
+    date_hierarchy = "submitted_at" 
+    list_per_page = 25
+    
+    fieldsets = (
+        (
+            "Submission Info",
+            {
+                "fields": (
+                    "status",
+                    "submitted_at", 
+                    "submitter_name",
+                    "submitter_email", 
+                    "submitter_organization",
+                    "converted_opportunity",
+                ),
+                "classes": ["tab"],
+            },
+        ),
+        (
+            "Opportunity Details", 
+            {
+                "fields": (
+                    "opportunity_name",
+                    "opportunity_type",
+                    "province_name",
+                    "region_name",
+                    "city",
+                    "venue",
+                ),
+                "classes": ["tab"],
+            },
+        ),
+        (
+            "Dates & Contact",
+            {
+                "fields": (
+                    "event_date_text",
+                    "application_deadline_text",
+                    "application_url", 
+                    "source_url",
+                    "contact_email",
+                    "organizer_name",
+                ),
+                "classes": ["tab"],
+            },
+        ),
+        (
+            "Vendor Information",
+            {
+                "fields": (
+                    "vendor_fee",
+                    "vendor_categories_text", 
+                    "additional_notes",
+                ),
+                "classes": ["tab"],
+            },
+        ),
+        (
+            "Admin Review",
+            {
+                "fields": (
+                    "admin_notes",
+                    "reviewed_by",
+                    "reviewed_at",
+                ),
+                "classes": ["tab"],
+            },
+        ),
+    )
+    
+    actions = [
+        "approve_submissions",
+        "reject_submissions", 
+        "mark_as_pending",
+    ]
+    
+    @admin.display(description="Status", ordering="status")
+    def status_colored(self, obj):
+        """Display colored status badge."""
+        colors = {
+            "pending": "#f59e0b",    # Orange
+            "approved": "#10b981",   # Green  
+            "rejected": "#ef4444",   # Red
+        }
+        icons = {
+            "pending": "⏳",
+            "approved": "✅", 
+            "rejected": "❌",
+        }
+        
+        color = colors.get(obj.status, "#6b7280")
+        icon = icons.get(obj.status, "")
+        
+        return format_html(
+            '<span style="background-color: {}; color: white; padding: 4px 8px; border-radius: 4px;">{} {}</span>',
+            color,
+            icon, 
+            obj.get_status_display()
+        )
+    
+    @action(description="✅ Approve selected submissions") 
+    def approve_submissions(self, request, queryset):
+        """Approve submissions and convert to opportunities."""
+        approved = 0
+        for submission in queryset.filter(status="pending"):
+            try:
+                # Create opportunity from submission
+                opportunity = self._convert_submission_to_opportunity(submission)
+                
+                # Update submission  
+                submission.status = "approved"
+                submission.reviewed_by = request.user.username
+                submission.reviewed_at = timezone.now()
+                submission.converted_opportunity = opportunity
+                submission.save()
+                
+                approved += 1
+                
+            except Exception as e:
+                self.message_user(
+                    request,
+                    f"Error converting {submission.opportunity_name}: {str(e)}", 
+                    level=messages.ERROR
+                )
+        
+        if approved:
+            self.message_user(
+                request,
+                f"Successfully approved {approved} submission(s) and created opportunities."
+            )
+    
+    @action(description="❌ Reject selected submissions")
+    def reject_submissions(self, request, queryset):
+        """Reject submissions."""
+        updated = queryset.filter(status="pending").update(
+            status="rejected",
+            reviewed_by=request.user.username,
+            reviewed_at=timezone.now()
+        )
+        self.message_user(request, f"Rejected {updated} submission(s).")
+    
+    @action(description="⏳ Mark as Pending Review")
+    def mark_as_pending(self, request, queryset):
+        """Mark submissions as pending review."""
+        updated = queryset.update(status="pending")
+        self.message_user(request, f"Marked {updated} submission(s) as pending review.")
+    
+    def _convert_submission_to_opportunity(self, submission):
+        """Convert a submission to an approved opportunity."""
+        from django.utils.text import slugify
+        
+        # Try to match province
+        try:
+            province = Province.objects.get(
+                Q(name__iexact=submission.province_name) |
+                Q(code__iexact=submission.province_name)
+            )
+        except Province.DoesNotExist:
+            # Default to first available province if no match
+            province = Province.objects.first()
+            if not province:
+                raise ValueError(f"No provinces available. Please create provinces first.")
+        
+        # Try to match or create region
+        region = None
+        if submission.region_name:
+            region, created = Region.objects.get_or_create(
+                name=submission.region_name,
+                province=province,
+                defaults={"slug": slugify(submission.region_name)}
+            )
+        
+        # Create the opportunity
+        opportunity = Opportunity.objects.create(
+            opportunity_name=submission.opportunity_name,
+            province=province,
+            region=region,
+            city=submission.city,
+            venue=submission.venue,
+            opportunity_type=submission.opportunity_type,
+            event_date_text=submission.event_date_text,
+            application_deadline_text=submission.application_deadline_text,
+            application_url=submission.application_url,
+            source_url=submission.source_url,
+            source_type="user_submission",
+            contact_email=submission.contact_email,
+            organizer_name=submission.organizer_name,
+            vendor_fee=submission.vendor_fee,
+            notes=submission.additional_notes,
+            # Submission tracking
+            submitter_name=submission.submitter_name,
+            submitter_email=submission.submitter_email,
+            submission_notes=f"Converted from submission ID {submission.id}",
+            # Set as unverified by default - requires manual verification
+            verification_status="unverified",
+            confidence_score=3,
+            status="tentative"
+        )
+        
+        return opportunity

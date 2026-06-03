@@ -5,10 +5,11 @@ from django.urls import reverse
 from django.utils.text import slugify
 
 
-class Region(models.Model):
-    """Manitoba geographic region."""
-
+class Province(models.Model):
+    """Canadian provinces and territories."""
+    
     name = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=2, unique=True)  # AB, BC, MB, etc.
     slug = models.SlugField(unique=True)
 
     class Meta:
@@ -16,6 +17,25 @@ class Region(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Region(models.Model):
+    """Geographic regions within provinces."""
+
+    name = models.CharField(max_length=100)
+    slug = models.SlugField()
+    province = models.ForeignKey(
+        Province,
+        on_delete=models.CASCADE,
+        related_name="regions"
+    )
+
+    class Meta:
+        ordering = ["province__name", "name"]
+        unique_together = [["province", "slug"], ["province", "name"]]
+
+    def __str__(self):
+        return f"{self.name}, {self.province.name}"
 
 
 class Opportunity(models.Model):
@@ -54,6 +74,7 @@ class Opportunity(models.Model):
         ("social_organizer", "Social Media (Organizer)"),
         ("social_repost", "Social Media (Repost)"),
         ("community", "Community Tip"),
+        ("user_submission", "User Submission"),
     ]
 
     # --- Status choices ---
@@ -93,7 +114,11 @@ class Opportunity(models.Model):
     # === Core fields ===
     opportunity_name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=280, unique=True)
-    province = models.CharField(max_length=100, default="Manitoba")
+    province = models.ForeignKey(
+        Province,
+        on_delete=models.CASCADE,
+        related_name="opportunities"
+    )
     region = models.ForeignKey(
         Region,
         on_delete=models.SET_NULL,
@@ -198,6 +223,11 @@ class Opportunity(models.Model):
         help_text="List of badge keys, e.g. ['verified', 'vendor_favorite']",
     )
 
+    # === Submission tracking (for user submissions) ===
+    submitter_name = models.CharField(max_length=200, blank=True, help_text="Name of person who submitted this opportunity")
+    submitter_email = models.EmailField(blank=True, help_text="Email of person who submitted this opportunity")
+    submission_notes = models.TextField(blank=True, help_text="Internal notes about this submission")
+
     # === Timestamps ===
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -226,10 +256,18 @@ class Opportunity(models.Model):
                 fields=["region"],
                 name="idx_region",
             ),
+            models.Index(
+                fields=["province"],
+                name="idx_province",
+            ),
+            models.Index(
+                fields=["verification_status"],
+                name="idx_verification_status",
+            ),
         ]
 
     def __str__(self):
-        return f"{self.opportunity_name} ({self.city})"
+        return f"{self.opportunity_name} ({self.city}, {self.province.code})"
 
     def is_publishable(self):
         """Whether this opportunity should be shown publicly."""
@@ -264,3 +302,62 @@ class Opportunity(models.Model):
                 counter += 1
             self.slug = slug
         super().save(*args, **kwargs)
+
+
+class OpportunitySubmission(models.Model):
+    """User submissions for new opportunities - requires approval."""
+    
+    # Basic submission info
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    submitter_name = models.CharField(max_length=200)
+    submitter_email = models.EmailField()
+    submitter_organization = models.CharField(max_length=200, blank=True, help_text="Organization name if submitting on behalf of one")
+    
+    # Opportunity details (similar to main model but simplified)
+    opportunity_name = models.CharField(max_length=255)
+    province_name = models.CharField(max_length=100, help_text="Province/territory name")
+    region_name = models.CharField(max_length=100, blank=True, help_text="Region within province (optional)")
+    city = models.CharField(max_length=100)
+    venue = models.CharField(max_length=200, blank=True)
+    opportunity_type = models.CharField(max_length=50, choices=Opportunity.OPPORTUNITY_TYPES)
+    
+    # Dates
+    event_date_text = models.CharField(max_length=200, help_text="When does this event occur? (e.g., 'Every Saturday', 'June 15-17, 2026')")
+    application_deadline_text = models.CharField(max_length=255, blank=True, help_text="When is the application deadline?")
+    
+    # Links and contact
+    application_url = models.URLField(max_length=500, blank=True, help_text="Where can vendors apply?")
+    source_url = models.URLField(max_length=500, help_text="Link to event information")
+    contact_email = models.EmailField(blank=True)
+    organizer_name = models.CharField(max_length=200, blank=True)
+    
+    # Additional info
+    vendor_fee = models.CharField(max_length=255, blank=True, help_text="Cost to participate (e.g., '$50', 'Free', 'Percentage of sales')")
+    vendor_categories_text = models.CharField(max_length=255, blank=True, help_text="What types of vendors are they looking for?")
+    additional_notes = models.TextField(blank=True, help_text="Any other details about this opportunity")
+    
+    # Admin fields
+    STATUS_CHOICES = [
+        ("pending", "Pending Review"),
+        ("approved", "Approved (Converted to Opportunity)"),
+        ("rejected", "Rejected"),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    admin_notes = models.TextField(blank=True, help_text="Internal notes for admin review")
+    reviewed_by = models.CharField(max_length=100, blank=True, help_text="Admin who reviewed this submission")
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    converted_opportunity = models.ForeignKey(
+        Opportunity,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="The opportunity created from this submission"
+    )
+    
+    class Meta:
+        ordering = ["-submitted_at"]
+        verbose_name = "Opportunity Submission"
+        verbose_name_plural = "Opportunity Submissions"
+    
+    def __str__(self):
+        return f"{self.opportunity_name} ({self.city}, {self.province_name}) - {self.status}"
