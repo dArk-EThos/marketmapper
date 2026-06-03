@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Market Mapper{% endblock %} | Manitoba Vendor Opportunities</title>
-    <meta name="description" content="{% block meta_description %}Find farmers markets, craft fairs, food festivals, and vendor opportunities across Manitoba.{% endblock %}">
+    <title>{% block title %}Market Mapper{% endblock %} | Canadian Vendor Opportunities</title>
+    <meta name="description" content="{% block meta_description %}Find farmers markets, craft fairs, food festivals, and vendor opportunities across Canada.{% endblock %}">
 
     <!-- Open Graph -->
     {% block og_tags %}
-    <meta property="og:title" content="Market Mapper — Manitoba Vendor Opportunities">
-    <meta property="og:description" content="Find farmers markets, craft fairs, food festivals, and vendor opportunities across Manitoba.">
+    <meta property="og:title" content="Market Mapper — Canadian Vendor Opportunities">
+    <meta property="og:description" content="Find farmers markets, craft fairs, food festivals, and vendor opportunities across Canada.">
     <meta property="og:image" content="{% static 'img/MM-logo.png' %}">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="en_CA">
@@ -221,7 +221,7 @@
                     <a href="{% url 'pages:about' %}" class="nav-link-premium px-4 py-2 text-white/80 hover:text-white font-medium tracking-wide uppercase text-sm transition-colors duration-200">
                         About
                     </a>
-                    <a href="{% url 'pages:contact' %}" class="ml-4 px-6 py-2.5 bg-harvest text-white hover:bg-harvest-600 font-semibold uppercase text-sm tracking-widest rounded-sm transition-colors duration-200 shadow-md hover:shadow-lg">
+                    <a href="{% url 'opportunities:submit' %}" class="ml-4 px-6 py-2.5 bg-harvest text-white hover:bg-harvest-600 font-semibold uppercase text-sm tracking-widest rounded-sm transition-colors duration-200 shadow-md hover:shadow-lg">
                         Submit a Market
                     </a>
                 </div>
@@ -254,7 +254,7 @@
                     <a href="{% url 'pages:about' %}" class="mobile-nav-link w-full text-center text-white text-3xl font-semibold uppercase tracking-widest-plus py-6 border-b border-white/10 hover:text-harvest-300 transition-colors duration-200">
                         About
                     </a>
-                    <a href="{% url 'pages:contact' %}" class="mt-8 w-full text-center bg-harvest text-white text-3xl font-bold uppercase tracking-widest py-5 rounded-sm hover:bg-harvest-600 transition-colors duration-200 shadow-lg">
+                    <a href="{% url 'opportunities:submit' %}" class="mt-8 w-full text-center bg-harvest text-white text-3xl font-bold uppercase tracking-widest py-5 rounded-sm hover:bg-harvest-600 transition-colors duration-200 shadow-lg">
                         Submit a Market
                     </a>
                 </div>
@@ -278,7 +278,7 @@
                         Market Mapper
                     </a>
                     <p class="text-gray-300 text-lg sm:text-xl mt-6 leading-relaxed">
-                        Manitoba vendor opportunities,<br>curated and verified.
+                        Canadian vendor opportunities,<br>curated and verified.
                     </p>
                     <p class="text-gray-400 text-base mt-6 flex items-center gap-2 justify-center md:justify-start">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
@@ -295,7 +295,7 @@
                         <li><a href="{% url 'stories:list' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">Vendor Stories</a></li>
                         <li><a href="{% url 'pages:about' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">About</a></li>
                         <li><a href="{% url 'pages:contact' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">Contact</a></li>
-                        <li><a href="{% url 'pages:contact' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">Submit a Market</a></li>
+                        <li><a href="{% url 'opportunities:submit' %}" class="text-gray-300 hover:text-harvest-300 transition-colors duration-200 text-base py-1 inline-block">Submit a Market</a></li>
                     </ul>
                 </div>
 
