@@ -7,9 +7,9 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView
 
-from .models import Opportunity, Province, Region, OpportunitySubmission
-from .filters import OpportunityFilter
-from .forms import OpportunitySubmissionForm
+from apps.opportunities.models import Opportunity, Province, Region, OpportunitySubmission
+from apps.opportunities.filters import OpportunityFilter
+from apps.opportunities.forms import OpportunitySubmissionForm
 
 
 class OpportunityListView(ListView):
